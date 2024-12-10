@@ -9,6 +9,7 @@ using TaleWorlds.Library;
 using TaleWorlds.Core;
 using TaleWorlds.CampaignSystem.Settlements;
 using System.Net.NetworkInformation;
+using TaleWorlds.Localization;
 
 namespace SnowballingKingdoms
 {
@@ -30,11 +31,11 @@ namespace SnowballingKingdoms
 
 
 
-                InformationManager.DisplayMessage(new InformationMessage(kingdom.Name.Value, TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
+                InformationManager.DisplayMessage(new InformationMessage(kingdom.Name.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
 
                 Settlement settlement = get_kingdom_settlement(kingdom);
 
-                InformationManager.DisplayMessage(new InformationMessage(settlement.Name.Value, TaleWorlds.Library.Color.ConvertStringToColor("#FF1342FF")));
+                InformationManager.DisplayMessage(new InformationMessage(settlement.Name.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF1342FF")));
 
                 break;
             }
@@ -53,7 +54,15 @@ namespace SnowballingKingdoms
                 }
             }
 
+            print_no_settlements_error(kingdom.Name.Value.ToString());
             return null;
+        }
+
+        private void print_no_settlements_error(string kingdomName)
+        {
+            string error = "{=SNBK.error1}Error: kingdom " + kingdomName + " has no settlements.";
+            TextObject errorTxt = new TextObject(error, null);
+            InformationManager.DisplayMessage(new InformationMessage(errorTxt.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
         }
 
 
