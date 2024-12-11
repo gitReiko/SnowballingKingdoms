@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.MountAndBlade;
-using TaleWorlds.Library;
 using TaleWorlds.Core;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Settlements;
-using System.Net.NetworkInformation;
+using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
+
 
 namespace SnowballingKingdoms
 {
@@ -33,9 +32,14 @@ namespace SnowballingKingdoms
 
                 InformationManager.DisplayMessage(new InformationMessage(kingdom.Name.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
 
-                Settlement settlement = get_kingdom_settlement(kingdom);
+                Settlement kingdomSettlement = get_kingdom_settlement(kingdom);
 
-                InformationManager.DisplayMessage(new InformationMessage(settlement.Name.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF1342FF")));
+                InformationManager.DisplayMessage(new InformationMessage(kingdomSettlement.Name.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF1342FF")));
+
+                create_new_clan(kingdom.Culture, kingdomSettlement);
+
+                
+
 
                 break;
             }
@@ -65,15 +69,20 @@ namespace SnowballingKingdoms
             InformationManager.DisplayMessage(new InformationMessage(errorTxt.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
         }
 
-
-        private void CreateNewClan()
+        private void create_new_clan(CultureObject clanCulture, Settlement kingdomSettlement)
         {
-            //HeroCreator.CreateSpecialHero
+            string clanId = "clan_12345_xfh";
+            TextObject clanName = new TextObject("Asen", null);
+            string bannerCode = "11.118.19.1836.1836.768.788.1.0.-30.510.47.38.1800.400.764.764.0.1.90.510.47.38.1800.400.764.764.0.1.0.503.47.38.220.220.599.564.0.1.0.503.118.38.170.170.599.564.0.1.0.510.47.38.204.170.599.564.0.1.0.510.47.38.204.170.599.564.0.1.90.503.47.38.220.220.931.564.0.1.0.503.118.38.170.170.931.564.0.1.0.510.47.38.204.170.931.564.0.1.0.510.47.38.204.170.931.564.0.1.90.503.47.38.220.220.931.966.0.1.0.503.118.38.170.170.931.966.0.1.0.510.47.38.204.170.931.966.0.1.0.510.47.38.204.170.931.966.0.1.90.503.47.38.220.220.599.966.0.1.0.503.118.38.170.170.599.966.0.1.0.510.47.38.204.170.599.966.0.1.0.510.47.38.204.170.599.966.0.1.90";
+            Banner clanBanner = new Banner(bannerCode);
 
 
-            //Kingdom.ge
 
-            //Settlement settlement = this.GetValidSettlement();
+            Clan newClan = Clan.CreateClan(clanId);
+
+            newClan.InitializeClan(clanName, clanName, clanCulture, clanBanner, kingdomSettlement.GatePosition);
+            newClan.UpdateHomeSettlement(kingdomSettlement);
+            newClan.AddRenown(1000f);
 
 
 
