@@ -8,7 +8,7 @@ using TaleWorlds.Localization;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-
+using System.Collections.Generic;
 
 namespace SnowballingKingdoms
 {
@@ -37,8 +37,6 @@ namespace SnowballingKingdoms
                 InformationManager.DisplayMessage(new InformationMessage(kingdomSettlement.Name.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF1342FF")));
 
                 create_new_clan(kingdom.Culture, kingdomSettlement);
-
-                
 
 
                 break;
@@ -84,11 +82,33 @@ namespace SnowballingKingdoms
             newClan.UpdateHomeSettlement(kingdomSettlement);
             newClan.AddRenown(1000f);
 
+            newClan.Color = clanBanner.GetPrimaryColor();
+            newClan.Color2 = clanBanner.GetSecondaryColor();
+            newClan.AlternativeColor = clanBanner.GetPrimaryColor();
+            newClan.AlternativeColor2 = clanBanner.GetSecondaryColor();
 
+            List<Hero> heros = this.GenerateClanMemeber(newClan, kingdomSettlement);
+            newClan.SetLeader(heros[0]);
 
 
 
         }
+
+        private List<Hero> GenerateClanMemeber(Clan clan, Settlement settlement)
+        {
+            Random rnd = new Random();
+            List<Hero> heros = new List<Hero>();
+            for (int i = 0; i < rnd.Next(3, 6); i++)
+            {
+                Hero hero = HeroCreator.CreateHeroAtOccupation(Occupation.Lord, settlement);
+                hero.Culture = clan.Culture;
+                hero.Gold = 50000;
+                hero.Clan = clan;
+                heros.Add(hero);
+            }
+            return heros;
+        }
+
 
     }
 }
