@@ -9,6 +9,12 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
+using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement.Categories;
+using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
+using TaleWorlds.CampaignSystem.CharacterCreationContent;
+using Extensions = TaleWorlds.Core.Extensions;
 
 namespace SnowballingKingdoms
 {
@@ -36,7 +42,7 @@ namespace SnowballingKingdoms
 
                 InformationManager.DisplayMessage(new InformationMessage(kingdomSettlement.Name.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF1342FF")));
 
-                create_new_clan(kingdom.Culture, kingdomSettlement);
+                create_new_clan(kingdom.Culture, kingdom, kingdomSettlement);
 
 
                 break;
@@ -67,10 +73,10 @@ namespace SnowballingKingdoms
             InformationManager.DisplayMessage(new InformationMessage(errorTxt.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
         }
 
-        private void create_new_clan(CultureObject clanCulture, Settlement kingdomSettlement)
+        private void create_new_clan(CultureObject clanCulture, Kingdom kingdom, Settlement kingdomSettlement)
         {
             string clanId = "clan_12345_xfh";
-            TextObject clanName = new TextObject("Asen", null);
+            TextObject clanName = new TextObject("Asenid", null);
             string bannerCode = "11.118.19.1836.1836.768.788.1.0.-30.510.47.38.1800.400.764.764.0.1.90.510.47.38.1800.400.764.764.0.1.0.503.47.38.220.220.599.564.0.1.0.503.118.38.170.170.599.564.0.1.0.510.47.38.204.170.599.564.0.1.0.510.47.38.204.170.599.564.0.1.90.503.47.38.220.220.931.564.0.1.0.503.118.38.170.170.931.564.0.1.0.510.47.38.204.170.931.564.0.1.0.510.47.38.204.170.931.564.0.1.90.503.47.38.220.220.931.966.0.1.0.503.118.38.170.170.931.966.0.1.0.510.47.38.204.170.931.966.0.1.0.510.47.38.204.170.931.966.0.1.90.503.47.38.220.220.599.966.0.1.0.503.118.38.170.170.599.966.0.1.0.510.47.38.204.170.599.966.0.1.0.510.47.38.204.170.599.966.0.1.90";
             Banner clanBanner = new Banner(bannerCode);
 
@@ -80,33 +86,43 @@ namespace SnowballingKingdoms
 
             newClan.InitializeClan(clanName, clanName, clanCulture, clanBanner, kingdomSettlement.GatePosition);
             newClan.UpdateHomeSettlement(kingdomSettlement);
-            newClan.AddRenown(1000f);
+            newClan.AddRenown(500f);
 
             newClan.Color = clanBanner.GetPrimaryColor();
             newClan.Color2 = clanBanner.GetSecondaryColor();
             newClan.AlternativeColor = clanBanner.GetPrimaryColor();
             newClan.AlternativeColor2 = clanBanner.GetSecondaryColor();
 
-            List<Hero> heros = this.GenerateClanMemeber(newClan, kingdomSettlement);
+            newClan.Kingdom = kingdom;
+
+            List<Hero> heros = this.GenerateClanMemeber(kingdom, newClan, kingdomSettlement);
             newClan.SetLeader(heros[0]);
 
-
+            newClan.CreateNewMobileParty(heros[0]);
 
         }
 
-        private List<Hero> GenerateClanMemeber(Clan clan, Settlement settlement)
+        private List<Hero> GenerateClanMemeber(Kingdom kingdom, Clan clan, Settlement settlement)
         {
-            Random rnd = new Random();
+            InformationManager.DisplayMessage(new InformationMessage(clan.Name.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
+
             List<Hero> heros = new List<Hero>();
-            for (int i = 0; i < rnd.Next(3, 6); i++)
+
+            for (int i = 0; i < 3; i++)
             {
-                Hero hero = HeroCreator.CreateHeroAtOccupation(Occupation.Lord, settlement);
+
+                MBReadOnlyList<CharacterObject> lordTemplates = kingdom.Culture.LordTemplates;
+
+                Hero hero = HeroCreator.CreateSpecialHero(Extensions.GetRandomElement<CharacterObject>(lordTemplates), settlement, null, null, MBRandom.RandomInt(Campaign.Current.Models.AgeModel.HeroComesOfAge, 50));
+
                 hero.Culture = clan.Culture;
-                hero.Gold = 50000;
+                hero.Gold = 20000;
                 hero.Clan = clan;
+
                 heros.Add(hero);
             }
-            return heros;
+
+            return heros; 
         }
 
 
