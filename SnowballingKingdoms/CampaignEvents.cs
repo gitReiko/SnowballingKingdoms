@@ -110,7 +110,6 @@ namespace SnowballingKingdoms
 
             for (int i = 0; i < 3; i++)
             {
-
                 MBReadOnlyList<CharacterObject> lordTemplates = kingdom.Culture.LordTemplates;
 
                 Hero hero = HeroCreator.CreateSpecialHero(Extensions.GetRandomElement<CharacterObject>(lordTemplates), settlement, null, null, MBRandom.RandomInt(Campaign.Current.Models.AgeModel.HeroComesOfAge, 50));
@@ -118,6 +117,7 @@ namespace SnowballingKingdoms
                 hero.Culture = clan.Culture;
                 hero.Gold = 20000;
                 hero.Clan = clan;
+                hero.StayingInSettlement = settlement;
 
                 heros.Add(hero);
             }
