@@ -24,7 +24,7 @@ namespace SnowballingKingdoms
 
             List<Hero> members = new List<Hero>();
 
-            members = get_members_without_family(kingdom, clan, settlement);
+            members = get_parents_with_children(kingdom, clan, settlement);
 
             return members;
 
@@ -99,9 +99,9 @@ namespace SnowballingKingdoms
                 childAge = MBRandom.RandomInt(childAge - 4, childAge - 1);
                 memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
 
-                int isFemale = MBRandom.RandomInt(1, 2);
+                int isFemale = MBRandom.RandomInt(1, 10);
 
-                if(isFemale == 2)
+                if (isFemale > 5)
                 {
                     memberTemplate.IsFemale = true;
                 }
