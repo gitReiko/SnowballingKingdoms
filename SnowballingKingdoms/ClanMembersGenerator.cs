@@ -24,23 +24,35 @@ namespace SnowballingKingdoms
 
             List<Hero> members = new List<Hero>();
 
-            members = GetParentsWithСhildren(kingdom, clan, settlement);
+            members = get_members_without_family(kingdom, clan, settlement);
 
             return members;
 
         }
 
-        private static List<Hero> ThreeMen(Kingdom kingdom, Clan clan, Settlement settlement)
+        private static List<Hero> get_members_without_family(Kingdom kingdom, Clan clan, Settlement settlement)
         {
             List<Hero> members = new List<Hero>();
             MBReadOnlyList<CharacterObject> lordTemplates = kingdom.Culture.LordTemplates;
 
-            for (int i = 0; i < 3; i++)
+            int membersNum = MBRandom.RandomInt(2, 5);
+            for (int i = 0; i < membersNum; i++)
             {
-                CharacterObject randomTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
+                CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
                 int randomAge = MBRandom.RandomInt(Campaign.Current.Models.AgeModel.HeroComesOfAge, 50);
 
-                Hero member = HeroCreator.CreateSpecialHero(randomTemplate, settlement, clan, null, randomAge);
+                int isFemale = 0;
+                if (i > 0)
+                {
+                    isFemale = MBRandom.RandomInt(1, 10);
+                }
+
+                if (isFemale > 5)
+                {
+                    memberTemplate.IsFemale = true;
+                }
+
+                Hero member = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, randomAge);
 
                 member.Gold = 20000;
                 member.StayingInSettlement = settlement;
@@ -51,7 +63,7 @@ namespace SnowballingKingdoms
             return members;
         }
 
-        private static List<Hero> GetParentsWithСhildren(Kingdom kingdom, Clan clan, Settlement settlement)
+        private static List<Hero> get_parents_with_children(Kingdom kingdom, Clan clan, Settlement settlement)
         {
             List<Hero> members = new List<Hero>();
             MBReadOnlyList<CharacterObject> lordTemplates = kingdom.Culture.LordTemplates;
