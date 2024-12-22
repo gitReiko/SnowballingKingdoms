@@ -95,34 +95,11 @@ namespace SnowballingKingdoms
 
             newClan.Kingdom = kingdom;
 
-            List<Hero> heros = this.GenerateClanMemeber(kingdom, newClan, kingdomSettlement);
+            List<Hero> heros = ClanMembersGenerator.GenerateClanMemeber(kingdom, newClan, kingdomSettlement);
             newClan.SetLeader(heros[0]);
 
             newClan.CreateNewMobileParty(heros[0]);
 
-        }
-
-        private List<Hero> GenerateClanMemeber(Kingdom kingdom, Clan clan, Settlement settlement)
-        {
-            InformationManager.DisplayMessage(new InformationMessage(clan.Name.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
-
-            List<Hero> heros = new List<Hero>();
-
-            for (int i = 0; i < 3; i++)
-            {
-                MBReadOnlyList<CharacterObject> lordTemplates = kingdom.Culture.LordTemplates;
-
-                Hero hero = HeroCreator.CreateSpecialHero(Extensions.GetRandomElement<CharacterObject>(lordTemplates), settlement, null, null, MBRandom.RandomInt(Campaign.Current.Models.AgeModel.HeroComesOfAge, 50));
-
-                hero.Culture = clan.Culture;
-                hero.Gold = 20000;
-                hero.Clan = clan;
-                hero.StayingInSettlement = settlement;
-
-                heros.Add(hero);
-            }
-
-            return heros; 
         }
 
 

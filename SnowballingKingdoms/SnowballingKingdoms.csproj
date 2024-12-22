@@ -232,6 +232,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CampaignEvents.cs" />
+    <Compile Include="ClanMembersGenerator.cs" />
     <Compile Include="MySubModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
