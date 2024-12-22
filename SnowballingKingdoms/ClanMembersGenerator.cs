@@ -24,7 +24,7 @@ namespace SnowballingKingdoms
 
             List<Hero> members = new List<Hero>();
 
-            members = get_mother_of_children(kingdom, clan, settlement);
+            members = get_older_son(kingdom, clan, settlement);
 
             return members;
 
@@ -217,6 +217,91 @@ namespace SnowballingKingdoms
 
 
             int childrensNum = get_number_of_childrens(motherAge);
+            int childAge = motherAge - 15;
+
+            for (int i = 0; i < childrensNum; i++)
+            {
+                childAge = MBRandom.RandomInt(childAge - 4, childAge - 1);
+                memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
+
+                int isFemale = MBRandom.RandomInt(1, 10);
+
+                if (isFemale > 5)
+                {
+                    memberTemplate.IsFemale = true;
+                }
+
+                Hero child = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, childAge);
+                child.Gold = 10000;
+                child.StayingInSettlement = settlement;
+
+                child.Mother = mother;
+
+                members.Add(child);
+            }
+
+            return members;
+        }
+
+        private static List<Hero> get_female_leader(Kingdom kingdom, Clan clan, Settlement settlement)
+        {
+            List<Hero> members = new List<Hero>();
+            MBReadOnlyList<CharacterObject> lordTemplates = kingdom.Culture.LordTemplates;
+
+            int membersNum = MBRandom.RandomInt(2, 5);
+            for (int i = 0; i < membersNum; i++)
+            {
+                CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
+                int randomAge = MBRandom.RandomInt(Campaign.Current.Models.AgeModel.HeroComesOfAge, 50);
+
+                int isFemale = 6;
+                if (i > 0)
+                {
+                    isFemale = MBRandom.RandomInt(1, 10);
+                }
+
+                if (isFemale > 5)
+                {
+                    memberTemplate.IsFemale = true;
+                }
+
+                Hero member = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, randomAge);
+
+                member.Gold = 20000;
+                member.StayingInSettlement = settlement;
+
+                members.Add(member);
+            }
+
+            return members;
+        }
+
+
+        private static List<Hero> get_older_son(Kingdom kingdom, Clan clan, Settlement settlement)
+        {
+            List<Hero> members = new List<Hero>();
+            MBReadOnlyList<CharacterObject> lordTemplates = kingdom.Culture.LordTemplates;
+
+            int motherAge = MBRandom.RandomInt(35, 55);
+            CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
+            memberTemplate.IsFemale = true;
+            Hero mother = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, motherAge);
+            mother.Gold = 20000;
+            mother.StayingInSettlement = settlement;
+
+            int olderSonAge = motherAge - 15;
+            memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
+            Hero olderSon = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, olderSonAge);
+            mother.Gold = 20000;
+            mother.StayingInSettlement = settlement;
+
+
+            olderSon.Mother = mother;
+            members.Add(olderSon);
+            members.Add(mother);
+
+
+            int childrensNum = get_number_of_childrens(motherAge) - 1;
             int childAge = motherAge - 15;
 
             for (int i = 0; i < childrensNum; i++)
