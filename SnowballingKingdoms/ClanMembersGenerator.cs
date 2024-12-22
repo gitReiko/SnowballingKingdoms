@@ -24,7 +24,7 @@ namespace SnowballingKingdoms
 
             List<Hero> members = new List<Hero>();
 
-            members = get_parents_with_children(kingdom, clan, settlement);
+            members = get_family_without_children(kingdom, clan, settlement);
 
             return members;
 
@@ -142,6 +142,63 @@ namespace SnowballingKingdoms
             }
 
             return MBRandom.RandomInt(1, maxNumber);
+        }
+
+        private static List<Hero> get_family_without_children(Kingdom kingdom, Clan clan, Settlement settlement)
+        {
+            List<Hero> members = new List<Hero>();
+            MBReadOnlyList<CharacterObject> lordTemplates = kingdom.Culture.LordTemplates;
+
+
+            int fatherAge = MBRandom.RandomInt(25, 55);
+            CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
+            Hero father = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, fatherAge);
+            father.Gold = 20000;
+            father.StayingInSettlement = settlement;
+
+
+            int motherAge = MBRandom.RandomInt(fatherAge - 3, fatherAge + 3);
+            memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
+            memberTemplate.IsFemale = true;
+            Hero mother = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, motherAge);
+            mother.Gold = 20000;
+            mother.StayingInSettlement = settlement;
+
+
+            father.Spouse = mother;
+            mother.Spouse = father;
+
+            members.Add(father);
+            members.Add(mother);
+
+
+            int membersNum = MBRandom.RandomInt(1, 3); ;
+
+            for (int i = 0; i < membersNum; i++)
+            {
+                memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
+                int randomAge = MBRandom.RandomInt(Campaign.Current.Models.AgeModel.HeroComesOfAge, 50);
+
+                int isFemale = 0;
+                if (i > 0)
+                {
+                    isFemale = MBRandom.RandomInt(1, 10);
+                }
+
+                if (isFemale > 5)
+                {
+                    memberTemplate.IsFemale = true;
+                }
+
+                Hero member = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, randomAge);
+
+                member.Gold = 20000;
+                member.StayingInSettlement = settlement;
+
+                members.Add(member);
+            }
+
+            return members;
         }
 
     }
