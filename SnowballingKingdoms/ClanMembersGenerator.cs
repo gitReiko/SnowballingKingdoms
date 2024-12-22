@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using Extensions = TaleWorlds.Core.Extensions;
-using TaleWorlds.CampaignSystem.ViewModelCollection;
-using static TaleWorlds.CampaignSystem.CampaignBehaviors.LordConversationsCampaignBehavior;
-using TaleWorlds.Localization;
 
 namespace SnowballingKingdoms
 {
@@ -19,12 +12,34 @@ namespace SnowballingKingdoms
 
         public static List<Hero> GenerateClanMemeber(Kingdom kingdom, Clan clan, Settlement settlement)
         {
-            // Debug 
-            InformationManager.DisplayMessage(new InformationMessage(clan.Name.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
-
             List<Hero> members = new List<Hero>();
 
-            members = get_older_son(kingdom, clan, settlement);
+            int clanType = MBRandom.RandomInt(1, 14);
+
+            if (clanType > 10)
+            {
+                members = get_parents_with_children(kingdom, clan, settlement);
+            }
+            else if(clanType == 10)
+            {
+                members = get_older_son(kingdom, clan, settlement);
+            }
+            else if (clanType == 9)
+            {
+                members = get_mother_of_children(kingdom, clan, settlement);
+            }
+            else if (clanType == 8)
+            {
+                members = get_female_leader(kingdom, clan, settlement);
+            }
+            else if (clanType > 4)
+            {
+                members = get_family_without_children(kingdom, clan, settlement);
+            }
+            else
+            {
+                members = get_members_without_family(kingdom, clan, settlement);
+            }
 
             return members;
 
