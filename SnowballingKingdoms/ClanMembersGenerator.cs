@@ -24,7 +24,7 @@ namespace SnowballingKingdoms
 
             List<Hero> members = new List<Hero>();
 
-            members = GetParentsWith2SonsAnd1Daughter(kingdom, clan, settlement);
+            members = GetParentsWithСhildren(kingdom, clan, settlement);
 
             return members;
 
@@ -51,13 +51,13 @@ namespace SnowballingKingdoms
             return members;
         }
 
-        private static List<Hero> GetParentsWith2SonsAnd1Daughter(Kingdom kingdom, Clan clan, Settlement settlement)
+        private static List<Hero> GetParentsWithСhildren(Kingdom kingdom, Clan clan, Settlement settlement)
         {
             List<Hero> members = new List<Hero>();
             MBReadOnlyList<CharacterObject> lordTemplates = kingdom.Culture.LordTemplates;
 
 
-            int fatherAge = MBRandom.RandomInt(45, 55);
+            int fatherAge = MBRandom.RandomInt(25, 55);
             CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
             Hero father = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, fatherAge);
             father.Gold = 20000;
@@ -72,49 +72,64 @@ namespace SnowballingKingdoms
             mother.StayingInSettlement = settlement;
 
 
-            int son1Age = MBRandom.RandomInt(motherAge-25, motherAge - 15);
-            memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-            Hero son1 = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, son1Age);
-            son1.Gold = 10000;
-            son1.StayingInSettlement = settlement;
-
-
-            int son2Age = MBRandom.RandomInt(son1Age - 5, son1Age - 1);
-            memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-            Hero son2 = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, son2Age);
-            son2.Gold = 10000;
-            son2.StayingInSettlement = settlement;
-
-
-            int daughterAge = MBRandom.RandomInt(son2Age - 5, son2Age - 1);
-            memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-            memberTemplate.IsFemale = true;
-            Hero daughter = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, daughterAge);
-            daughter.Gold = 10000;
-            daughter.StayingInSettlement = settlement;
-
-
             father.Spouse = mother;
             mother.Spouse = father;
 
-            son1.Father = father;
-            son1.Mother = mother;
-
-            son2.Father = father;
-            son2.Mother = mother;
-
-            daughter.Father = father;
-            daughter.Mother = mother;
-
-
             members.Add(father);
             members.Add(mother);
-            members.Add(son1);
-            members.Add(son2);
-            members.Add(daughter);
 
+
+            int childrensNum = get_number_of_childrens(motherAge);
+            int childAge = motherAge-15;
+
+            for (int i = 0; i < childrensNum; i++)
+            {
+                childAge = MBRandom.RandomInt(childAge - 4, childAge - 1);
+                memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
+
+                int isFemale = MBRandom.RandomInt(1, 2);
+
+                if(isFemale == 2)
+                {
+                    memberTemplate.IsFemale = true;
+                }
+
+                Hero child = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, childAge);
+                child.Gold = 10000;
+                child.StayingInSettlement = settlement;
+
+                child.Father = father;
+                child.Mother = mother;
+
+                members.Add(child);
+            }
 
             return members;
+        }
+
+
+        private static int get_number_of_childrens(int motherAge)
+        {
+            int maxNumber = 0;
+
+            if(motherAge > 40)
+            {
+                maxNumber = 4;
+            }
+            else if(motherAge > 30)
+            {
+                maxNumber = 3;
+            }
+            else if (motherAge > 25)
+            {
+                maxNumber = 2;
+            }
+            else
+            {
+                return 1;
+            }
+
+            return MBRandom.RandomInt(1, maxNumber);
         }
 
     }
