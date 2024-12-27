@@ -1,20 +1,10 @@
 ﻿using System;
 using TaleWorlds.Core;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
 using System.Collections.Generic;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
-using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement.Categories;
-using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
-using TaleWorlds.CampaignSystem.CharacterCreationContent;
-using Extensions = TaleWorlds.Core.Extensions;
 
 namespace SnowballingKingdoms
 {
@@ -75,38 +65,43 @@ namespace SnowballingKingdoms
 
         private void create_new_clan(CultureObject clanCulture, Kingdom kingdom, Settlement kingdomSettlement)
         {
-            Snowball snowball = get_random_snowball();
+            MBReadOnlyList<Snowball> snowballs = Snowball.get_all_unused();
 
-            string clanId = snowball.Id;
-            TextObject clanName = snowball.Name;
-            Banner clanBanner = new Banner(snowball.Banner);
+            if (!snowballs.IsEmpty())
+            {
+                Snowball snowball = snowballs[MBRandom.RandomInt(0, (snowballs.Count-1))];
+
+                string clanId = snowball.Id;
+                TextObject clanName = snowball.Name;
+                Banner clanBanner = new Banner(snowball.Banner);
 
 
 
-            Clan newClan = Clan.CreateClan(clanId);
+                Clan newClan = Clan.CreateClan(clanId);
 
-            newClan.InitializeClan(clanName, clanName, clanCulture, clanBanner, kingdomSettlement.GatePosition);
-            newClan.UpdateHomeSettlement(kingdomSettlement);
-            newClan.AddRenown(500f);
+                newClan.InitializeClan(clanName, clanName, clanCulture, clanBanner, kingdomSettlement.GatePosition);
+                newClan.UpdateHomeSettlement(kingdomSettlement);
+                newClan.AddRenown(500f);
 
-            newClan.Color = clanBanner.GetPrimaryColor();
-            newClan.Color2 = clanBanner.GetSecondaryColor();
-            newClan.AlternativeColor = clanBanner.GetPrimaryColor();
-            newClan.AlternativeColor2 = clanBanner.GetSecondaryColor();
+                newClan.Color = clanBanner.GetPrimaryColor();
+                newClan.Color2 = clanBanner.GetSecondaryColor();
+                newClan.AlternativeColor = clanBanner.GetPrimaryColor();
+                newClan.AlternativeColor2 = clanBanner.GetSecondaryColor();
 
-            newClan.Kingdom = kingdom;
+                newClan.Kingdom = kingdom;
 
-            List<Hero> heros = ClanMembersGenerator.GenerateClanMemeber(kingdom, newClan, kingdomSettlement);
-            newClan.SetLeader(heros[0]);
+                List<Hero> heros = ClanMembersGenerator.GenerateClanMemeber(kingdom, newClan, kingdomSettlement);
+                newClan.SetLeader(heros[0]);
 
-            newClan.CreateNewMobileParty(heros[0]);
-
+                newClan.CreateNewMobileParty(heros[0]);
+            }
+            else
+            {
+                // print_no_snowballs_left() -- no, becouse it's spam
+            }
         }
 
-        private Snowball get_random_snowball()
-        {
-            return Snowball.All[MBRandom.RandomInt(0, (Snowball.All.Count - 1))];
-        }
+
 
 
     }

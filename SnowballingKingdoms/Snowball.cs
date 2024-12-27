@@ -23,12 +23,40 @@ namespace SnowballingKingdoms
             this.Banner = node.Attributes.GetNamedItem("banner").Value.ToString();
         }
 
-        public static MBReadOnlyList<Snowball> All
+        public static MBReadOnlyList<Snowball> get_all_unused()
+        {
+            MBReadOnlyList<Snowball> unused = new MBReadOnlyList<Snowball>();
+
+            foreach (Snowball snowball in Snowball.All)
+            {
+                if (is_clan_unused(snowball))
+                {
+                    unused.Add(snowball);
+                }
+            }
+
+            return unused;
+        }
+
+        private static MBReadOnlyList<Snowball> All
         {
             get
             {
                 return MBObjectManager.Instance.GetObjectTypeList<Snowball>();
             }
+        }
+
+        private static bool is_clan_unused(Snowball snowball)
+        {
+            foreach(Clan clan in Clan.All)
+            {
+                if(clan.Name  == snowball.Name)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
 
