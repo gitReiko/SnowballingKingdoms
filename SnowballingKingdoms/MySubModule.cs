@@ -7,6 +7,7 @@ using TaleWorlds.Library;
 using TaleWorlds.LinQuick;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.ObjectSystem;
 
 namespace SnowballingKingdoms
 {
@@ -36,6 +37,15 @@ namespace SnowballingKingdoms
         private void AddBehaviours(CampaignGameStarter starter)
         {
             starter.AddBehavior(new SnowballEvents());
+        }
+
+        public override void BeginGameStart(Game game)
+        {
+            if (game.GameType is Campaign)
+            {
+                game.ObjectManager.RegisterType<Snowball>("Snowball", "Snowballs", 100U, true, false);
+                MBObjectManager.Instance.LoadXML("Snowballs", false);
+            }
         }
 
     }

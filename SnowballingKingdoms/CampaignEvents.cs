@@ -45,7 +45,7 @@ namespace SnowballingKingdoms
                 create_new_clan(kingdom.Culture, kingdom, kingdomSettlement);
 
 
-                break;
+                    break;
             }
             
             
@@ -75,10 +75,11 @@ namespace SnowballingKingdoms
 
         private void create_new_clan(CultureObject clanCulture, Kingdom kingdom, Settlement kingdomSettlement)
         {
-            string clanId = "clan_12345_xfh";
-            TextObject clanName = new TextObject("Asenid", null);
-            string bannerCode = "11.118.19.1836.1836.768.788.1.0.-30.510.47.38.1800.400.764.764.0.1.90.510.47.38.1800.400.764.764.0.1.0.503.47.38.220.220.599.564.0.1.0.503.118.38.170.170.599.564.0.1.0.510.47.38.204.170.599.564.0.1.0.510.47.38.204.170.599.564.0.1.90.503.47.38.220.220.931.564.0.1.0.503.118.38.170.170.931.564.0.1.0.510.47.38.204.170.931.564.0.1.0.510.47.38.204.170.931.564.0.1.90.503.47.38.220.220.931.966.0.1.0.503.118.38.170.170.931.966.0.1.0.510.47.38.204.170.931.966.0.1.0.510.47.38.204.170.931.966.0.1.90.503.47.38.220.220.599.966.0.1.0.503.118.38.170.170.599.966.0.1.0.510.47.38.204.170.599.966.0.1.0.510.47.38.204.170.599.966.0.1.90";
-            Banner clanBanner = new Banner(bannerCode);
+            Snowball snowball = get_random_snowball();
+
+            string clanId = snowball.Id;
+            TextObject clanName = snowball.Name;
+            Banner clanBanner = new Banner(snowball.Banner);
 
 
 
@@ -100,6 +101,11 @@ namespace SnowballingKingdoms
 
             newClan.CreateNewMobileParty(heros[0]);
 
+        }
+
+        private Snowball get_random_snowball()
+        {
+            return Snowball.All[MBRandom.RandomInt(0, (Snowball.All.Count - 1))];
         }
 
 
