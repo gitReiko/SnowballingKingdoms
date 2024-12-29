@@ -22,24 +22,13 @@ namespace SnowballingKingdoms
         {
             foreach(Kingdom kingdom in Kingdom.All)
             {
-
-
-
-
                 InformationManager.DisplayMessage(new InformationMessage(kingdom.Name.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
 
-                Settlement kingdomSettlement = get_kingdom_settlement(kingdom);
-
-                InformationManager.DisplayMessage(new InformationMessage(kingdomSettlement.Name.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF1342FF")));
-
-                create_new_clan(kingdom.Culture, kingdom, kingdomSettlement);
+                create_new_clan(kingdom.Culture, kingdom);
 
 
-                    break;
+                return;
             }
-            
-            
-            //InformationManager.DisplayMessage(new InformationMessage("message 123", TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
         }
 
         private Settlement get_kingdom_settlement(Kingdom kingdom)
@@ -63,13 +52,18 @@ namespace SnowballingKingdoms
             InformationManager.DisplayMessage(new InformationMessage(errorTxt.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
         }
 
-        private void create_new_clan(CultureObject clanCulture, Kingdom kingdom, Settlement kingdomSettlement)
+        private void create_new_clan(CultureObject clanCulture, Kingdom kingdom)
         {
             MBReadOnlyList<Snowball> snowballs = Snowball.get_all_unused_for_kingdom(kingdom.StringId);
 
             if (snowballs.IsEmpty())
             {
-                snowballs = Snowball.get_all_unused_for_culture(kingdom.Culture.StringId);
+                snowballs = Snowball.get_all_unused_for_kingdom_main_culture(kingdom.Culture.StringId);
+            }
+
+            if (snowballs.IsEmpty())
+            {
+                snowballs = Snowball.get_all_unused_for_kingdom_culturies(kingdom);
             }
 
             if (snowballs.IsEmpty())
@@ -88,6 +82,8 @@ namespace SnowballingKingdoms
 
 
                 Clan newClan = Clan.CreateClan(clanId);
+
+                Settlement kingdomSettlement = get_kingdom_settlement(kingdom);
 
                 newClan.InitializeClan(clanName, clanName, clanCulture, clanBanner, kingdomSettlement.GatePosition);
                 newClan.UpdateHomeSettlement(kingdomSettlement);

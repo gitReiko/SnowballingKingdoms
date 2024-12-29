@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
@@ -44,7 +46,7 @@ namespace SnowballingKingdoms
             return unused;
         }
 
-        public static MBReadOnlyList<Snowball> get_all_unused_for_culture(string cultureId)
+        public static MBReadOnlyList<Snowball> get_all_unused_for_kingdom_main_culture(string cultureId)
         {
             MBReadOnlyList<Snowball> unused = new MBReadOnlyList<Snowball>();
 
@@ -53,6 +55,25 @@ namespace SnowballingKingdoms
                 if ((cultureId == snowball.Culture) && is_clan_unused(snowball))
                 {
                     unused.Add(snowball);
+                }
+            }
+
+            return unused;
+        }
+
+        public static MBReadOnlyList<Snowball> get_all_unused_for_kingdom_culturies(Kingdom kingdom)
+        {
+            MBReadOnlyList<Snowball> unused = new MBReadOnlyList<Snowball>();
+            List<string> culturies = get_all_kingdom_culturies(kingdom);
+
+            foreach(string culture in culturies)
+            {
+                foreach (Snowball snowball in Snowball.All)
+                {
+                    if ((culture == snowball.Culture) && is_clan_unused(snowball))
+                    {
+                        unused.Add(snowball);
+                    }
                 }
             }
 
@@ -93,6 +114,34 @@ namespace SnowballingKingdoms
             }
 
             return true;
+        }
+
+        private static List<string> get_all_kingdom_culturies(Kingdom kingdom)
+        {
+            List<string> culturies = new List<string>();
+
+            foreach(Settlement settlement in kingdom.Settlements)
+            {
+                if(!is_culture_already_exists(culturies, settlement.Culture.StringId))
+                {
+                    culturies.Add(settlement.Culture.StringId);
+                }
+            }
+
+            return culturies;
+        }
+
+        private static bool is_culture_already_exists(List<string> culturies, string settlementCulture)
+        {
+            foreach(string culture in culturies)
+            {
+                if(culture == settlementCulture)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
 
