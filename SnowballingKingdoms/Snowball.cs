@@ -15,12 +15,48 @@ namespace SnowballingKingdoms
 
         public string Banner {  get; set; }
 
+        public string Kingdom { get; set; }
+
+        public string Culture { get; set; }
+
         public override void Deserialize(MBObjectManager objectManager, XmlNode node)
         {
             base.Deserialize(objectManager, node);
             this.Id = node.Attributes.GetNamedItem("id").Value.ToString();
             this.Name = new TextObject(node.Attributes.GetNamedItem("name").Value, null);
+            this.Kingdom = node.Attributes.GetNamedItem("kingdom").Value.ToString();
+            this.Culture = node.Attributes.GetNamedItem("culture").Value.ToString();
             this.Banner = node.Attributes.GetNamedItem("banner").Value.ToString();
+        }
+
+        public static MBReadOnlyList<Snowball> get_all_unused_for_kingdom(string kingdomId)
+        {
+            MBReadOnlyList<Snowball> unused = new MBReadOnlyList<Snowball>();
+
+            foreach (Snowball snowball in Snowball.All)
+            {
+                if ( (kingdomId == snowball.Kingdom) && is_clan_unused(snowball))
+                {
+                    unused.Add(snowball);
+                }
+            }
+
+            return unused;
+        }
+
+        public static MBReadOnlyList<Snowball> get_all_unused_for_culture(string cultureId)
+        {
+            MBReadOnlyList<Snowball> unused = new MBReadOnlyList<Snowball>();
+
+            foreach (Snowball snowball in Snowball.All)
+            {
+                if ((cultureId == snowball.Culture) && is_clan_unused(snowball))
+                {
+                    unused.Add(snowball);
+                }
+            }
+
+            return unused;
         }
 
         public static MBReadOnlyList<Snowball> get_all_unused()

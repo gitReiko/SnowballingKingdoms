@@ -65,7 +65,17 @@ namespace SnowballingKingdoms
 
         private void create_new_clan(CultureObject clanCulture, Kingdom kingdom, Settlement kingdomSettlement)
         {
-            MBReadOnlyList<Snowball> snowballs = Snowball.get_all_unused();
+            MBReadOnlyList<Snowball> snowballs = Snowball.get_all_unused_for_kingdom(kingdom.StringId);
+
+            if (snowballs.IsEmpty())
+            {
+                snowballs = Snowball.get_all_unused_for_culture(kingdom.Culture.StringId);
+            }
+
+            if (snowballs.IsEmpty())
+            {
+                snowballs = Snowball.get_all_unused();
+            }
 
             if (!snowballs.IsEmpty())
             {
