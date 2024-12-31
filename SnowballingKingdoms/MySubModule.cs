@@ -45,6 +45,8 @@ namespace SnowballingKingdoms
             {
                 game.ObjectManager.RegisterType<Snowball>("Snowball", "Snowballs", 100U, true, false);
                 MBObjectManager.Instance.LoadXML("Snowballs", false);
+
+                Snowball.initilize_unused_snowballs();
             }
         }
 

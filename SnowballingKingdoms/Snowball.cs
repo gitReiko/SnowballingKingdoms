@@ -21,6 +21,8 @@ namespace SnowballingKingdoms
 
         public string Culture { get; set; }
 
+        public static MBReadOnlyList<Snowball> AllUnusedSnowballs { get; private set; }
+
         public override void Deserialize(MBObjectManager objectManager, XmlNode node)
         {
             base.Deserialize(objectManager, node);
@@ -31,11 +33,31 @@ namespace SnowballingKingdoms
             this.Banner = node.Attributes.GetNamedItem("banner").Value.ToString();
         }
 
-        public static MBReadOnlyList<Snowball> get_all_unused_for_kingdom(string kingdomId)
+        public static void initilize_unused_snowballs()
         {
             MBReadOnlyList<Snowball> unused = new MBReadOnlyList<Snowball>();
 
             foreach (Snowball snowball in Snowball.All)
+            {
+                if (is_clan_unused(snowball))
+                {
+                    unused.Add(snowball);
+                }
+            }
+
+            Snowball.AllUnusedSnowballs = unused;
+        }
+
+        public static void remove_used_snowball(Snowball snowball)
+        {
+            Snowball.AllUnusedSnowballs.Remove(snowball);
+        }
+
+        public static MBReadOnlyList<Snowball> get_all_unused_for_kingdom(string kingdomId)
+        {
+            MBReadOnlyList<Snowball> unused = new MBReadOnlyList<Snowball>();
+
+            foreach (Snowball snowball in Snowball.AllUnusedSnowballs)
             {
                 if ( (kingdomId == snowball.Kingdom) && is_clan_unused(snowball))
                 {
@@ -50,7 +72,7 @@ namespace SnowballingKingdoms
         {
             MBReadOnlyList<Snowball> unused = new MBReadOnlyList<Snowball>();
 
-            foreach (Snowball snowball in Snowball.All)
+            foreach (Snowball snowball in Snowball.AllUnusedSnowballs)
             {
                 if ((cultureId == snowball.Culture) && is_clan_unused(snowball))
                 {
@@ -68,7 +90,7 @@ namespace SnowballingKingdoms
 
             foreach(string culture in culturies)
             {
-                foreach (Snowball snowball in Snowball.All)
+                foreach (Snowball snowball in Snowball.AllUnusedSnowballs)
                 {
                     if ((culture == snowball.Culture) && is_clan_unused(snowball))
                     {
@@ -84,7 +106,7 @@ namespace SnowballingKingdoms
         {
             MBReadOnlyList<Snowball> unused = new MBReadOnlyList<Snowball>();
 
-            foreach (Snowball snowball in Snowball.All)
+            foreach (Snowball snowball in Snowball.AllUnusedSnowballs)
             {
                 if (is_clan_unused(snowball))
                 {

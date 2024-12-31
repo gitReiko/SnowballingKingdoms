@@ -100,6 +100,8 @@ namespace SnowballingKingdoms
                 newClan.SetLeader(heros[0]);
 
                 newClan.CreateNewMobileParty(heros[0]);
+
+                Snowball.remove_used_snowball(snowball);
             }
             else
             {
