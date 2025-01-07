@@ -22,8 +22,6 @@ namespace SnowballingKingdoms
         {
             foreach(Kingdom kingdom in Kingdom.All)
             {
-                InformationManager.DisplayMessage(new InformationMessage(kingdom.Name.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
-
                 create_new_clan(kingdom.Culture, kingdom);
 
 
@@ -102,6 +100,8 @@ namespace SnowballingKingdoms
                 newClan.CreateNewMobileParty(heros[0]);
 
                 Snowball.remove_used_snowball(snowball);
+
+                print_clan_created(kingdom, snowball);
             }
             else
             {
@@ -119,6 +119,18 @@ namespace SnowballingKingdoms
             {
                 return snowball.Id;
             }
+        }
+
+        private void print_clan_created(Kingdom kingdom, Snowball snowball)
+        {
+            TextObject str1 = new TextObject("{=snow.clan_created1}The growing power of", null);
+            TextObject str2 = new TextObject("{=snow.clan_created2}led to the creation of", null);
+
+            string message = str1.ToString() + " " + kingdom.Name.ToString() + " " + str2.ToString() + " " + snowball.Name.ToString() + ".";
+
+            Color color = Color.FromUint(kingdom.LabelColor);
+
+            InformationManager.DisplayMessage(new InformationMessage(message, color));
         }
 
 
