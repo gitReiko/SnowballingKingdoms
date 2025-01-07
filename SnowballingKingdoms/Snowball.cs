@@ -6,6 +6,7 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 
 namespace SnowballingKingdoms 
@@ -13,9 +14,10 @@ namespace SnowballingKingdoms
     internal class Snowball : MBObjectBase
     {
         public string Id { get; set; }
+
         public TextObject Name { get; set; }
 
-        public string Banner {  get; set; }
+        public string Banner { get; set; }
 
         public string Kingdom { get; set; }
 
@@ -25,12 +27,126 @@ namespace SnowballingKingdoms
 
         public override void Deserialize(MBObjectManager objectManager, XmlNode node)
         {
-            base.Deserialize(objectManager, node);
-            this.Id = node.Attributes.GetNamedItem("id").Value.ToString();
+            if (is_necessary_attributes_exists_and_valid(node))
+            {
+                base.Deserialize(objectManager, node);
+
+                handle_id_attr(node);
+                handle_name_attr(node);
+                handle_banner_attr(node);
+                handle_kingdom_attr(node);
+                handle_culture_attr(node);
+            }
+        }
+
+        private bool is_necessary_attributes_exists_and_valid(XmlNode node)
+        {
+            if (
+                (node.Attributes == null)
+                ||
+                (node.Attributes["id"] == null)
+                ||
+                is_name_empty(node)
+                ||
+                is_banner_empty(node)
+            )
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private bool is_name_empty(XmlNode node)
+        {
+            if (node.Attributes["name"] == null)
+            {
+                return true;
+            }
+            else
+            {
+                TextObject Name = new TextObject(node.Attributes.GetNamedItem("name").Value, null);
+                string NameWithoutLocalization = Name.ToString();
+
+                if(String.IsNullOrEmpty(NameWithoutLocalization))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        private bool is_banner_empty(XmlNode node)
+        {
+            if (node.Attributes["banner"] == null)
+            {
+                return true;
+            }
+            else
+            {
+                string banner = node.Attributes.GetNamedItem("banner").Value.ToString();
+
+                if (String.IsNullOrEmpty(banner))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        private void handle_id_attr(XmlNode node)
+        {
+            if (node.Attributes["id"] != null)
+            {
+                this.Id = node.Attributes.GetNamedItem("id").Value.ToString();
+            }
+            else
+            {
+                this.Id = null;
+            }
+        }
+
+        private void handle_name_attr(XmlNode node)
+        {
             this.Name = new TextObject(node.Attributes.GetNamedItem("name").Value, null);
-            this.Kingdom = node.Attributes.GetNamedItem("kingdom").Value.ToString();
-            this.Culture = node.Attributes.GetNamedItem("culture").Value.ToString();
+
+        }
+
+        private void handle_banner_attr(XmlNode node)
+        {
             this.Banner = node.Attributes.GetNamedItem("banner").Value.ToString();
+        }
+
+        private void handle_kingdom_attr(XmlNode node)
+        {
+            if (node.Attributes["kingdom"] != null)
+            {
+                this.Kingdom = node.Attributes.GetNamedItem("kingdom").Value.ToString();
+            }
+            else
+            {
+                this.Kingdom = null;
+            }
+        }
+
+        private void handle_culture_attr(XmlNode node)
+        {
+            if (node.Attributes["culture"] != null)
+            {
+                this.Culture = node.Attributes.GetNamedItem("culture").Value.ToString();
+            }
+            else
+            {
+                this.Culture = null;
+            }
         }
 
         public static void initilize_unused_snowballs()

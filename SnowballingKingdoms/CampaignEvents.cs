@@ -75,7 +75,7 @@ namespace SnowballingKingdoms
             {
                 Snowball snowball = snowballs[MBRandom.RandomInt(0, (snowballs.Count-1))];
 
-                string clanId = snowball.Id;
+                string clanId = get_clan_id(snowball);
                 TextObject clanName = snowball.Name;
                 Banner clanBanner = new Banner(snowball.Banner);
 
@@ -106,6 +106,18 @@ namespace SnowballingKingdoms
             else
             {
                 // print_no_snowballs_left() -- no, becouse it's spam
+            }
+        }
+
+        private string get_clan_id(Snowball snowball)
+        {
+            if (snowball.Id == null)
+            {
+                return "sb_clan_" + Clan.All.Count;
+            }
+            else
+            {
+                return snowball.Id;
             }
         }
 
