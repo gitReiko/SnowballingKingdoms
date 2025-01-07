@@ -10,6 +10,7 @@ namespace SnowballingKingdoms
 {
     internal class SnowballEvents : CampaignBehaviorBase
     {
+        const float NEED_TO_CREATE = 1.5f;
 
         public override void SyncData(IDataStore dataStore) { }
 
@@ -22,32 +23,62 @@ namespace SnowballingKingdoms
         {
             foreach(Kingdom kingdom in Kingdom.All)
             {
-                create_new_clan(kingdom.Culture, kingdom);
-
-
-                return;
+                if(is_clan_necessary_to_create(kingdom))
+                {
+                    create_new_clan(kingdom.Culture, kingdom);
+                }
             }
         }
 
-        private Settlement get_kingdom_settlement(Kingdom kingdom)
+        private bool is_clan_necessary_to_create(Kingdom kingdom)
         {
+            float settlementsRate = get_settlement_count(kingdom) / get_clans_count(kingdom);
+
+            // debug
+            /*
+            InformationManager.DisplayMessage(new InformationMessage("settle" + get_settlement_count(kingdom), Color.ConvertStringToColor("#FF0042FF")));
+            InformationManager.DisplayMessage(new InformationMessage("clan" + get_clans_count(kingdom), Color.ConvertStringToColor("#FF0042FF")));
+            InformationManager.DisplayMessage(new InformationMessage("res"+ settlementsRate, Color.ConvertStringToColor("#FF0042FF")));
+            */
+
+            if (settlementsRate > NEED_TO_CREATE)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private float get_settlement_count(Kingdom kingdom)
+        {
+            int count = 0;
+
             foreach (Settlement settlement in kingdom.Settlements)
             {
                 if (settlement.IsCastle || settlement.IsTown)
                 {
-                    return settlement;
+                    count++;
                 }
             }
 
-            print_no_settlements_error(kingdom.Name.Value.ToString());
-            return null;
+            return (float) count;
         }
 
-        private void print_no_settlements_error(string kingdomName)
+        private float get_clans_count(Kingdom kingdom)
         {
-            string error = "{=SNBK.error1}Error: kingdom " + kingdomName + " has no settlements.";
-            TextObject errorTxt = new TextObject(error, null);
-            InformationManager.DisplayMessage(new InformationMessage(errorTxt.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
+            int count = 0;
+
+            foreach (Clan clan in kingdom.Clans)
+            {
+                if (clan.IsMinorFaction == false)
+                {
+                    count++;
+                }
+            }
+
+            return (float) count;
         }
 
         private void create_new_clan(CultureObject clanCulture, Kingdom kingdom)
@@ -84,6 +115,7 @@ namespace SnowballingKingdoms
                 Settlement kingdomSettlement = get_kingdom_settlement(kingdom);
 
                 newClan.InitializeClan(clanName, clanName, clanCulture, clanBanner, kingdomSettlement.GatePosition);
+                newClan.IsNoble = true;
                 newClan.UpdateHomeSettlement(kingdomSettlement);
                 newClan.AddRenown(500f);
 
@@ -107,6 +139,27 @@ namespace SnowballingKingdoms
             {
                 // print_no_snowballs_left() -- no, becouse it's spam
             }
+        }
+
+        private Settlement get_kingdom_settlement(Kingdom kingdom)
+        {
+            foreach (Settlement settlement in kingdom.Settlements)
+            {
+                if (settlement.IsCastle || settlement.IsTown)
+                {
+                    return settlement;
+                }
+            }
+
+            print_no_settlements_error(kingdom.Name.Value.ToString());
+            return null;
+        }
+
+        private void print_no_settlements_error(string kingdomName)
+        {
+            string error = "{=SNBK.error1}Error: kingdom " + kingdomName + " has no settlements.";
+            TextObject errorTxt = new TextObject(error, null);
+            InformationManager.DisplayMessage(new InformationMessage(errorTxt.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
         }
 
         private string get_clan_id(Snowball snowball)
