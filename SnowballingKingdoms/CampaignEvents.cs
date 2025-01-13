@@ -5,6 +5,8 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using System.Collections.Generic;
+using TaleWorlds.MountAndBlade.Diamond;
+using TaleWorlds.Diamond;
 
 namespace SnowballingKingdoms
 {
@@ -108,8 +110,6 @@ namespace SnowballingKingdoms
                 TextObject clanName = snowball.Name;
                 Banner clanBanner = new Banner(snowball.Banner);
 
-
-
                 Clan newClan = Clan.CreateClan(clanId);
 
                 Settlement kingdomSettlement = get_kingdom_settlement(kingdom);
@@ -129,7 +129,7 @@ namespace SnowballingKingdoms
                 List<Hero> heros = ClanMembersGenerator.GenerateClanMemeber(kingdom, newClan, kingdomSettlement);
                 newClan.SetLeader(heros[0]);
 
-                newClan.CreateNewMobileParty(heros[0]);
+                //newClan.CreateNewMobileParty(heros[0]);
 
                 Snowball.remove_used_snowball(snowball);
 
@@ -185,6 +185,17 @@ namespace SnowballingKingdoms
 
             InformationManager.DisplayMessage(new InformationMessage(message, color));
         }
+
+        /*
+        private void log_start_of_snowball_creation(Snowball snowball)
+        {
+
+            // crash game 
+
+            Logger snow = new Logger("snowballs", true, true, false);
+            snow.Print("snowballs_event");
+        }
+        */
 
 
 
