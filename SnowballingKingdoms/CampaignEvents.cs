@@ -18,10 +18,13 @@ namespace SnowballingKingdoms
 
         public override void RegisterEvents()
         {
-            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, DailyTickEvent);
+            // For debug 
+            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, WeeklyClanCreate);
+
+            //CampaignEvents.WeeklyTickEvent.AddNonSerializedListener(this, WeeklyClanCreate);
         }
 
-        private void DailyTickEvent()
+        private void WeeklyClanCreate()
         {
             foreach(Kingdom kingdom in Kingdom.All)
             {
