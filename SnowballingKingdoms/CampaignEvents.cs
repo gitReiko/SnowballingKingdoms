@@ -117,7 +117,8 @@ namespace SnowballingKingdoms
                 newClan.InitializeClan(clanName, clanName, clanCulture, clanBanner, kingdomSettlement.GatePosition);
                 newClan.IsNoble = true;
                 newClan.UpdateHomeSettlement(kingdomSettlement);
-                newClan.AddRenown(500f);
+                newClan.AddRenown(350f);
+                newClan.Influence = 100f;
 
                 newClan.Color = clanBanner.GetPrimaryColor();
                 newClan.Color2 = clanBanner.GetSecondaryColor();
