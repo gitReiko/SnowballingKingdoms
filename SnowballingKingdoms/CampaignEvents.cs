@@ -7,21 +7,22 @@ using TaleWorlds.Localization;
 using System.Collections.Generic;
 using TaleWorlds.MountAndBlade.Diamond;
 using TaleWorlds.Diamond;
+using System.Globalization;
 
 namespace SnowballingKingdoms
 {
     internal class SnowballEvents : CampaignBehaviorBase
     {
-        const float NEED_TO_CREATE = 1.5f;
+        const float NEED_TO_CREATE = 1.7f;
 
         public override void SyncData(IDataStore dataStore) { }
 
         public override void RegisterEvents()
         {
             // For debug 
-            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, WeeklyClanCreate);
+            //CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, WeeklyClanCreate);
 
-            //CampaignEvents.WeeklyTickEvent.AddNonSerializedListener(this, WeeklyClanCreate);
+            CampaignEvents.WeeklyTickEvent.AddNonSerializedListener(this, WeeklyClanCreate);
         }
 
         private void WeeklyClanCreate()
@@ -109,6 +110,11 @@ namespace SnowballingKingdoms
             {
                 Snowball snowball = snowballs[MBRandom.RandomInt(0, (snowballs.Count-1))];
 
+                if(snowball.SettlementCulture != null)
+                {
+                    clanCulture = snowball.SettlementCulture;
+                }
+
                 string clanId = get_clan_id(snowball);
                 TextObject clanName = snowball.Name;
                 Banner clanBanner = new Banner(snowball.Banner);
@@ -130,7 +136,7 @@ namespace SnowballingKingdoms
 
                 newClan.Kingdom = kingdom;
 
-                List<Hero> heros = ClanMembersGenerator.GenerateClanMemeber(kingdom, newClan, kingdomSettlement);
+                List<Hero> heros = ClanMembersGenerator.GenerateClanMemeber(newClan, kingdomSettlement);
                 newClan.SetLeader(heros[0]);
 
                 //newClan.CreateNewMobileParty(heros[0]);

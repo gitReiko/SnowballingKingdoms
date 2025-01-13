@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Xml;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -23,6 +24,8 @@ namespace SnowballingKingdoms
 
         public string Culture { get; set; }
 
+        public CultureObject SettlementCulture { get; private set; }
+
         public static MBReadOnlyList<Snowball> AllUnusedSnowballs { get; private set; }
 
         public override void Deserialize(MBObjectManager objectManager, XmlNode node)
@@ -36,6 +39,7 @@ namespace SnowballingKingdoms
                 handle_banner_attr(node);
                 handle_kingdom_attr(node);
                 handle_culture_attr(node);
+                this.SettlementCulture = null;
             }
         }
 
@@ -177,6 +181,8 @@ namespace SnowballingKingdoms
             {
                 if ( (kingdomId == snowball.Kingdom) && is_clan_unused(snowball))
                 {
+
+
                     unused.Add(snowball);
                 }
             }
@@ -202,14 +208,15 @@ namespace SnowballingKingdoms
         public static MBReadOnlyList<Snowball> get_all_unused_for_kingdom_culturies(Kingdom kingdom)
         {
             MBReadOnlyList<Snowball> unused = new MBReadOnlyList<Snowball>();
-            List<string> culturies = get_all_kingdom_culturies(kingdom);
+            List<CultureObject> culturies = get_all_kingdom_culturies(kingdom);
 
-            foreach(string culture in culturies)
+            foreach(CultureObject culture in culturies)
             {
                 foreach (Snowball snowball in Snowball.AllUnusedSnowballs)
                 {
-                    if ((culture == snowball.Culture) && is_clan_unused(snowball))
+                    if ((culture.StringId == snowball.Culture) && is_clan_unused(snowball))
                     {
+                        snowball.SettlementCulture = culture;
                         unused.Add(snowball);
                     }
                 }
@@ -226,11 +233,26 @@ namespace SnowballingKingdoms
             {
                 if (is_clan_unused(snowball))
                 {
+                    // It possible that next function may create a heavy load
+                    snowball.SettlementCulture = get_culture_for_random_snowball(snowball);
                     unused.Add(snowball);
                 }
             }
 
             return unused;
+        }
+
+        private static CultureObject get_culture_for_random_snowball(Snowball snowball)
+        {
+            foreach(Settlement settle in Settlement.All)
+            {
+                if(snowball.Culture == settle.Culture.StringId)
+                {
+                    return settle.Culture;
+                }
+            }
+
+            return null;
         }
 
         private static MBReadOnlyList<Snowball> All
@@ -254,24 +276,24 @@ namespace SnowballingKingdoms
             return true;
         }
 
-        private static List<string> get_all_kingdom_culturies(Kingdom kingdom)
+        private static List<CultureObject> get_all_kingdom_culturies(Kingdom kingdom)
         {
-            List<string> culturies = new List<string>();
+            List<CultureObject> culturies = new List<CultureObject>();
 
             foreach(Settlement settlement in kingdom.Settlements)
             {
-                if(!is_culture_already_exists(culturies, settlement.Culture.StringId))
+                if(!is_culture_already_exists(culturies, settlement.Culture))
                 {
-                    culturies.Add(settlement.Culture.StringId);
+                    culturies.Add(settlement.Culture);
                 }
             }
 
             return culturies;
         }
 
-        private static bool is_culture_already_exists(List<string> culturies, string settlementCulture)
+        private static bool is_culture_already_exists(List<CultureObject> culturies, CultureObject settlementCulture)
         {
-            foreach(string culture in culturies)
+            foreach(CultureObject culture in culturies)
             {
                 if(culture == settlementCulture)
                 {
