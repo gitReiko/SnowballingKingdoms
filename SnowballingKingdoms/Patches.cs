@@ -13,11 +13,16 @@ namespace SnowballingKingdoms
         [HarmonyPrefix]
         public static bool SkipValidation(string id, ref bool skipValidation)
         {
-            bool flag = id == "Snowballs";
-            if (flag)
+            if (id == "Snowballs")
             {
                 skipValidation = true;
             }
+            else if(id == "SnowConfigs")
+            {
+                skipValidation = true;
+            }
+
+
             return true;
         }
     }

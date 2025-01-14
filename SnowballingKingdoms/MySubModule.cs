@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Reflection;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
-using TaleWorlds.Library;
-using TaleWorlds.LinQuick;
-using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 
@@ -45,8 +40,11 @@ namespace SnowballingKingdoms
             {
                 game.ObjectManager.RegisterType<Snowball>("Snowball", "Snowballs", 100U, true, false);
                 MBObjectManager.Instance.LoadXML("Snowballs", false);
-
                 Snowball.initilize_unused_snowballs();
+
+                game.ObjectManager.RegisterType<SnowConfig>("SnowConfig", "SnowConfigs", 100U, true, false);
+                MBObjectManager.Instance.LoadXML("SnowConfigs", false);
+                SnowConfig.init_config();
             }
         }
 

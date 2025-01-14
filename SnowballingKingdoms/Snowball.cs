@@ -1,28 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Xml;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
-using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 
 namespace SnowballingKingdoms 
 {
     internal class Snowball : MBObjectBase
     {
-        public string Id { get; set; }
+        public string Id { get; private set; }
 
-        public TextObject Name { get; set; }
+        public TextObject Name { get; private set; }
 
-        public string Banner { get; set; }
+        public string Banner { get; private set; }
 
-        public string Kingdom { get; set; }
+        public string Kingdom { get; private set; }
 
-        public string Culture { get; set; }
+        public string Culture { get; private set; }
 
         public CultureObject SettlementCulture { get; private set; }
 

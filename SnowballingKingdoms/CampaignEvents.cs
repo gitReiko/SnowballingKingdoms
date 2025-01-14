@@ -5,15 +5,11 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using System.Collections.Generic;
-using TaleWorlds.MountAndBlade.Diamond;
-using TaleWorlds.Diamond;
-using System.Globalization;
 
 namespace SnowballingKingdoms
 {
     internal class SnowballEvents : CampaignBehaviorBase
     {
-        const float NEED_TO_CREATE = 1.7f;
 
         public override void SyncData(IDataStore dataStore) { }
 
@@ -47,7 +43,7 @@ namespace SnowballingKingdoms
             InformationManager.DisplayMessage(new InformationMessage("res"+ settlementsRate, Color.ConvertStringToColor("#FF0042FF")));
             */
 
-            if (settlementsRate > NEED_TO_CREATE)
+            if (settlementsRate > SnowConfig.ClanCreationFactor)
             {
                 return true;
             }
