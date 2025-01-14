@@ -15,19 +15,23 @@ namespace SnowballingKingdoms
 
         public override void RegisterEvents()
         {
-            // For debug 
-            //CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, WeeklyClanCreate);
-
-            CampaignEvents.WeeklyTickEvent.AddNonSerializedListener(this, WeeklyClanCreate);
+            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, ClanCreation);
         }
 
-        private void WeeklyClanCreate()
+        private void ClanCreation()
         {
-            foreach(Kingdom kingdom in Kingdom.All)
+            long daysNow = Convert.ToInt64(CampaignTime.Now.ToDays);
+
+            InformationManager.DisplayMessage(new InformationMessage("Day: "+daysNow.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
+
+            if ((daysNow % SnowConfig.CreateEveryDays) == 0)
             {
-                if(is_clan_necessary_to_create(kingdom))
+                foreach (Kingdom kingdom in Kingdom.All)
                 {
-                    create_new_clan(kingdom.Culture, kingdom);
+                    if (is_clan_necessary_to_create(kingdom))
+                    {
+                        create_new_clan(kingdom.Culture, kingdom);
+                    }
                 }
             }
         }
