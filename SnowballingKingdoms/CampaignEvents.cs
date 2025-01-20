@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using TaleWorlds.Core;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-using System.Collections.Generic;
 
 namespace SnowballingKingdoms
 {
@@ -21,8 +21,6 @@ namespace SnowballingKingdoms
         private void ClanCreation()
         {
             long daysNow = Convert.ToInt64(CampaignTime.Now.ToDays);
-
-            InformationManager.DisplayMessage(new InformationMessage("Day: "+daysNow.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
 
             if ((daysNow % SnowConfig.CreateEveryDays) == 0)
             {
@@ -161,15 +159,16 @@ namespace SnowballingKingdoms
                 }
             }
 
-            print_no_settlements_error(kingdom.Name.Value.ToString());
+            print_no_settlements_error(kingdom.Name);
             return null;
         }
 
-        private void print_no_settlements_error(string kingdomName)
+        private void print_no_settlements_error(TextObject kingdomName)
         {
-            string error = "{=SNBK.error1}Error: kingdom " + kingdomName + " has no settlements.";
-            TextObject errorTxt = new TextObject(error, null);
-            InformationManager.DisplayMessage(new InformationMessage(errorTxt.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
+            TextObject message = new TextObject("{=sbin.error_no_kingdom_settlements} Error: kingdom {KINGDOM} has no settlements.");
+            message.SetTextVariable("KINGDOM", kingdomName);
+
+            InformationManager.DisplayMessage(new InformationMessage(message.ToString(), TaleWorlds.Library.Color.ConvertStringToColor("#FF0042FF")));
         }
 
         private string get_clan_id(Snowball snowball)
@@ -186,14 +185,13 @@ namespace SnowballingKingdoms
 
         private void print_clan_created(Kingdom kingdom, Snowball snowball)
         {
-            TextObject str1 = new TextObject("{=snow.clan_created1}The growing power of", null);
-            TextObject str2 = new TextObject("{=snow.clan_created2}led to the creation of", null);
-
-            string message = str1.ToString() + " " + kingdom.Name.ToString() + " " + str2.ToString() + " " + snowball.Name.ToString() + ".";
+            TextObject message = new TextObject("{=sbin.clan_created} The growing power of {KINGDOM} led to the creation of {SNOWBALL}.");
+            message.SetTextVariable("KINGDOM", kingdom.Name);
+            message.SetTextVariable("SNOWBALL", snowball.Name);
 
             Color color = Color.FromUint(kingdom.LabelColor);
 
-            InformationManager.DisplayMessage(new InformationMessage(message, color));
+            InformationManager.DisplayMessage(new InformationMessage(message.ToString(), color));
         }
 
         /*
