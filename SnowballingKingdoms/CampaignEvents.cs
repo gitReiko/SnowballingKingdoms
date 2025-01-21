@@ -5,6 +5,8 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using static TaleWorlds.CampaignSystem.CampaignBehaviors.LordConversationsCampaignBehavior;
+using TaleWorlds.CampaignSystem.Actions;
 
 namespace SnowballingKingdoms
 {
@@ -137,7 +139,12 @@ namespace SnowballingKingdoms
                 List<Hero> heros = ClanMembersGenerator.GenerateClanMemeber(newClan, kingdomSettlement);
                 newClan.SetLeader(heros[0]);
 
-                //newClan.CreateNewMobileParty(heros[0]);
+                foreach (Hero hero in heros)
+                {
+                    hero.ChangeState(Hero.CharacterStates.Active);
+                }
+
+                ChangeKingdomAction.ApplyByJoinToKingdom(newClan, kingdom, true);
 
                 Snowball.remove_used_snowball(snowball);
 
