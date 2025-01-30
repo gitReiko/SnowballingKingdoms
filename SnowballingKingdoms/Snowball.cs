@@ -262,9 +262,9 @@ namespace SnowballingKingdoms
 
         private static bool is_clan_unused(Snowball snowball)
         {
-            foreach(Clan clan in Clan.All)
+            foreach (Clan clan in Clan.All)
             {
-                if(clan.Name  == snowball.Name)
+                if ((clan.Name == snowball.Name) || (clan.StringId == snowball.Id))
                 {
                     return false;
                 }
