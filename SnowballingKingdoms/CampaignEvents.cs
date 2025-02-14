@@ -5,8 +5,8 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-using static TaleWorlds.CampaignSystem.CampaignBehaviors.LordConversationsCampaignBehavior;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.ObjectSystem;
 
 namespace SnowballingKingdoms
 {
@@ -49,12 +49,63 @@ namespace SnowballingKingdoms
 
             if (settlementsRate > SnowConfig.ClanCreationFactor)
             {
-                return true;
+                if (SnowConfig.OnlyAIExpand && SnowConfig.OnlyPlayerExpand)
+                {
+                    return true;
+                }
+                else if(SnowConfig.OnlyAIExpand)
+                {
+                    if(is_player_vassal_of_kingdom(kingdom))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else if (SnowConfig.OnlyPlayerExpand)
+                {
+                    if (is_player_vassal_of_kingdom(kingdom))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
             }
             else
             {
                 return false;
             }
+        }
+
+        private bool is_player_vassal_of_kingdom(Kingdom kingdom)
+        {
+            MBGUID playerId = Clan.PlayerClan.Id;
+
+            foreach (Clan clan in kingdom.Clans)
+            {
+                if(clan.Id == playerId)
+                {
+                    if(clan.IsUnderMercenaryService)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private float get_settlement_count(Kingdom kingdom)
