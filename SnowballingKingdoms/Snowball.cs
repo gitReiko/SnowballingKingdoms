@@ -21,6 +21,8 @@ namespace SnowballingKingdoms
 
         public string Culture { get; private set; }
 
+        public int Priority { get; private set; }
+
         public CultureObject SettlementCulture { get; private set; }
 
         public static MBReadOnlyList<Snowball> AllUnusedSnowballs { get; private set; }
@@ -36,6 +38,7 @@ namespace SnowballingKingdoms
                 handle_banner_attr(node);
                 handle_kingdom_attr(node);
                 handle_culture_attr(node);
+                handle_priority_attr(node);
                 this.SettlementCulture = null;
             }
         }
@@ -150,6 +153,18 @@ namespace SnowballingKingdoms
             }
         }
 
+        private void handle_priority_attr(XmlNode node)
+        {
+            if (node.Attributes["priority"] != null)
+            {
+                this.Priority = Convert.ToInt32(node.Attributes.GetNamedItem("priority").Value.ToString());
+            }
+            else
+            {
+                this.Priority = 1;
+            }
+        }
+
         public static void initilize_unused_snowballs()
         {
             MBReadOnlyList<Snowball> unused = new MBReadOnlyList<Snowball>();
@@ -178,11 +193,11 @@ namespace SnowballingKingdoms
             {
                 if ( (kingdomId == snowball.Kingdom) && is_clan_unused(snowball))
                 {
-
-
                     unused.Add(snowball);
                 }
             }
+
+            unused = get_snowballs_with_highest_priority(unused);
 
             return unused;
         }
@@ -198,6 +213,8 @@ namespace SnowballingKingdoms
                     unused.Add(snowball);
                 }
             }
+
+            unused = get_snowballs_with_highest_priority(unused);
 
             return unused;
         }
@@ -218,6 +235,8 @@ namespace SnowballingKingdoms
                     }
                 }
             }
+
+            unused = get_snowballs_with_highest_priority(unused);
 
             return unused;
         }
@@ -301,6 +320,36 @@ namespace SnowballingKingdoms
             return false;
         }
 
+        private static MBReadOnlyList<Snowball> get_snowballs_with_highest_priority(MBReadOnlyList<Snowball> snowballs)
+        {
+            int highest_priority = get_highest_priority(snowballs);
+
+            MBReadOnlyList<Snowball> prioritySnowballs = new MBReadOnlyList<Snowball>();
+            foreach (Snowball snowball in snowballs)
+            {
+                if(snowball.Priority == highest_priority)
+                {
+                    prioritySnowballs.Add(snowball);
+                }
+            }
+
+            return prioritySnowballs;
+        }
+
+        private static int get_highest_priority(MBReadOnlyList<Snowball> snowballs)
+        {
+            int highest_priority = 2147483647;
+
+            foreach (Snowball snowball in snowballs)
+            {
+                if(highest_priority > snowball.Priority)
+                {
+                    highest_priority = snowball.Priority;
+                }
+            }
+
+            return highest_priority;
+        }
 
 
 
