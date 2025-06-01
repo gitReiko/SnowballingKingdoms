@@ -18,6 +18,7 @@ namespace SnowballingKingdoms
         public override void RegisterEvents()
         {
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, ClanCreation);
+            CampaignEvents.ClanTierIncrease.AddNonSerializedListener(this, AddMemberToClan);
         }
 
         private void ClanCreation()
@@ -33,6 +34,17 @@ namespace SnowballingKingdoms
                         create_new_clan(kingdom.Culture, kingdom);
                     }
                 }
+            }
+        }
+
+        private void AddMemberToClan(Clan clan, bool shouldNotify)
+        {
+            if (
+                Clan.PlayerClan != clan 
+                && clan.IsMinorFaction == false 
+                && SnowConfig.AddNewMemberAfterClanTierIncrease
+            ) {
+                ClanMembersGenerator.add_member_to_clan(clan);
             }
         }
 
@@ -224,7 +236,7 @@ namespace SnowballingKingdoms
                 newClan.InitializeClan(clanName, clanName, clanCulture, clanBanner, kingdomSettlement.GatePosition);
                 newClan.IsNoble = true;
                 newClan.UpdateHomeSettlement(kingdomSettlement);
-                newClan.AddRenown(350f);
+                newClan.AddRenown(100f);
                 newClan.Influence = 100f;
 
                 newClan.Color = clanBanner.GetPrimaryColor();

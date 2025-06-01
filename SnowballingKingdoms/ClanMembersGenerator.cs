@@ -46,6 +46,30 @@ namespace SnowballingKingdoms
 
         }
 
+        public static void add_member_to_clan(Clan clan)
+        {
+            MBReadOnlyList<CharacterObject> lordTemplates = clan.Culture.LordTemplates;
+            CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
+            memberTemplate.Culture = clan.Culture;
+            int randomAge = MBRandom.RandomInt(20, 43);
+            int isFemale = MBRandom.RandomInt(1, 10);
+
+            if (isFemale == 5 || isFemale == 9)
+            {
+                memberTemplate.IsFemale = true;
+            }
+            else
+            {
+                memberTemplate.IsFemale = false;
+            }
+
+            Hero member = HeroCreator.CreateSpecialHero(memberTemplate, null, clan, null, randomAge);
+            member.Gold = 30000;
+            member.ChangeState(Hero.CharacterStates.Active);
+
+            clan.Heroes.Add(member);
+        }
+
         private static List<Hero> get_members_without_family(Clan clan, Settlement settlement)
         {
             List<Hero> members = new List<Hero>();

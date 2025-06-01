@@ -8,6 +8,7 @@ namespace SnowballingKingdoms
     internal class SnowConfig : MBObjectBase 
     {
         const byte CREATE_EVERY_DAYS_MIN = 1;
+        const bool ADD_NEW_MEMBER_AFTER_CLAN_TIER_INCREASE = true;
 
         const float CLAN_CREATION_FACTOR_LESS_THAN_3_SETTLEMENTS_DEFAULT = 1.5f;
         const float CLAN_CREATION_FACTOR_LESS_THAN_6_SETTLEMENTS_DEFAULT = 2.0f;
@@ -36,10 +37,9 @@ namespace SnowballingKingdoms
         public static float ClanCreationFactorMoreThan90Settlements { get; private set; }
 
         public static ushort CreateEveryDays { get; private set; }
-
         public static bool OnlyPlayerExpand { get; private set; }
-
         public static bool OnlyAIExpand { get; private set; }
+        public static bool AddNewMemberAfterClanTierIncrease { get; private set; }
 
         private float ClanCreationFactorLessThan3Settlements_;
         private float ClanCreationFactorLessThan6Settlements_;
@@ -55,10 +55,9 @@ namespace SnowballingKingdoms
         private float ClanCreationFactorMoreThan90Settlements_;
 
         private ushort CreateEveryDays_;
-
         private bool OnlyPlayerExpand_;
-
         private bool OnlyAIExpand_;
+        private bool AddNewMemberAfterClanTierIncrease_;
 
         public override void Deserialize(MBObjectManager objectManager, XmlNode node)
         {
@@ -80,6 +79,7 @@ namespace SnowballingKingdoms
             init_create_every_days(node);
             init_only_player_expand(node);
             init_only_ai_expand(node);
+            init_add_new_member_after_clan_tier_increase(node);
         }
 
         private void init_clan_creation_factor_less_than_3_settlements(XmlNode node)
@@ -248,6 +248,12 @@ namespace SnowballingKingdoms
             this.OnlyAIExpand_ = Convert.ToBoolean(node.Attributes.GetNamedItem("only_ai_expand").Value.ToString());
         }
 
+        private void init_add_new_member_after_clan_tier_increase(XmlNode node)
+        {
+            this.AddNewMemberAfterClanTierIncrease_ 
+                = Convert.ToBoolean(node.Attributes.GetNamedItem("add_new_member_after_clan_tier_increase").Value.ToString());
+        }
+
         private static MBReadOnlyList<SnowConfig> All
         {
             get
@@ -274,6 +280,7 @@ namespace SnowballingKingdoms
             CreateEveryDays = SnowConfig.All[0].CreateEveryDays_;
             OnlyPlayerExpand = SnowConfig.All[0].OnlyPlayerExpand_;
             OnlyAIExpand = SnowConfig.All[0].OnlyAIExpand_;
+            AddNewMemberAfterClanTierIncrease = SnowConfig.All[0].AddNewMemberAfterClanTierIncrease_;
         }
 
     }
