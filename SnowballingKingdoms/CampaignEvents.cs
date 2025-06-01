@@ -38,8 +38,6 @@ namespace SnowballingKingdoms
 
         private bool is_clan_necessary_to_create(Kingdom kingdom)
         {
-            float settlementsRate = get_settlement_count(kingdom) / get_clans_count(kingdom);
-
             // debug
             /*
             InformationManager.DisplayMessage(new InformationMessage("settle" + get_settlement_count(kingdom), Color.ConvertStringToColor("#FF0042FF")));
@@ -47,33 +45,19 @@ namespace SnowballingKingdoms
             InformationManager.DisplayMessage(new InformationMessage("res"+ settlementsRate, Color.ConvertStringToColor("#FF0042FF")));
             */
 
-            if (settlementsRate > SnowConfig.ClanCreationFactor)
+            if (is_settlements_enough_to_create_new_clan(kingdom))
             {
                 if (SnowConfig.OnlyAIExpand && SnowConfig.OnlyPlayerExpand)
                 {
                     return true;
                 }
-                else if(SnowConfig.OnlyAIExpand)
+                else if (SnowConfig.OnlyAIExpand)
                 {
-                    if(is_player_vassal_of_kingdom(kingdom))
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
+                    return !is_player_vassal_of_kingdom(kingdom);
                 }
                 else if (SnowConfig.OnlyPlayerExpand)
                 {
-                    if (is_player_vassal_of_kingdom(kingdom))
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return is_player_vassal_of_kingdom(kingdom);
                 }
                 else
                 {
@@ -84,6 +68,69 @@ namespace SnowballingKingdoms
             {
                 return false;
             }
+        }
+
+        private bool is_settlements_enough_to_create_new_clan(Kingdom kingdom)
+        {
+            float settlementsCount = get_settlement_count(kingdom);
+            float settlementsRate = settlementsCount / get_clans_count(kingdom);
+
+            if (settlementsCount < 3 && settlementsRate > SnowConfig.ClanCreationFactorLessThan3Settlements )
+            {
+                return true;
+            }
+
+            if (settlementsCount < 6 && settlementsRate > SnowConfig.ClanCreationFactorLessThan6Settlements)
+            {
+                return true;
+            }
+
+            if (settlementsCount < 10 && settlementsRate > SnowConfig.ClanCreationFactorLessThan10Settlements)
+            {
+                return true;
+            }
+
+            if (settlementsCount < 20 && settlementsRate > SnowConfig.ClanCreationFactorLessThan20Settlements)
+            {
+                return true;
+            }
+
+            if (settlementsCount < 30 && settlementsRate > SnowConfig.ClanCreationFactorLessThan30Settlements)
+            {
+                return true;
+            }
+
+            if (settlementsCount < 40 && settlementsRate > SnowConfig.ClanCreationFactorLessThan40Settlements)
+            {
+                return true;
+            }
+
+            if (settlementsCount < 50 && settlementsRate > SnowConfig.ClanCreationFactorLessThan50Settlements)
+            {
+                return true;
+            }
+
+            if (settlementsCount < 60 && settlementsRate > SnowConfig.ClanCreationFactorLessThan60Settlements)
+            {
+                return true;
+            }
+
+            if (settlementsCount < 70 && settlementsRate > SnowConfig.ClanCreationFactorLessThan70Settlements)
+            {
+                return true;
+            }
+
+            if (settlementsCount < 80 && settlementsRate > SnowConfig.ClanCreationFactorLessThan80Settlements)
+            {
+                return true;
+            }
+
+            if (settlementsCount < 90 && settlementsRate > SnowConfig.ClanCreationFactorLessThan90Settlements)
+            {
+                return true;
+            }
+
+            return settlementsCount > 89 && settlementsRate > SnowConfig.ClanCreationFactorMoreThan90Settlements;
         }
 
         private bool is_player_vassal_of_kingdom(Kingdom kingdom)
