@@ -40,10 +40,12 @@ namespace SnowballingKingdoms
         private void AddMemberToClan(Clan clan, bool shouldNotify)
         {
             if (
-                Clan.PlayerClan != clan 
-                && clan.IsMinorFaction == false 
-                && SnowConfig.AddNewMemberAfterClanTierIncrease
-            ) {
+                SnowConfig.AddNewMemberAfterClanTierIncrease
+                && clan.IsClan
+                && clan.IsMinorFaction == false
+                && clan.IsEliminated == false
+                && Clan.PlayerClan != clan 
+             ) {
                 ClanMembersGenerator.add_member_to_clan(clan);
             }
         }
