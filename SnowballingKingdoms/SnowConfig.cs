@@ -40,6 +40,7 @@ namespace SnowballingKingdoms
         public static bool OnlyPlayerExpand { get; private set; }
         public static bool OnlyAIExpand { get; private set; }
         public static bool AddNewMemberAfterClanTierIncrease { get; private set; }
+        public static ushort NewMembersLimitAfterClanTierIncrease { get; private set; }
 
         private float ClanCreationFactorLessThan3Settlements_;
         private float ClanCreationFactorLessThan6Settlements_;
@@ -58,6 +59,7 @@ namespace SnowballingKingdoms
         private bool OnlyPlayerExpand_;
         private bool OnlyAIExpand_;
         private bool AddNewMemberAfterClanTierIncrease_;
+        private ushort NewMembersLimitAfterClanTierIncrease_;
 
         public override void Deserialize(MBObjectManager objectManager, XmlNode node)
         {
@@ -80,6 +82,7 @@ namespace SnowballingKingdoms
             init_only_player_expand(node);
             init_only_ai_expand(node);
             init_add_new_member_after_clan_tier_increase(node);
+            init_new_members_limit_after_clan_tier_increase(node);
         }
 
         private void init_clan_creation_factor_less_than_3_settlements(XmlNode node)
@@ -254,6 +257,13 @@ namespace SnowballingKingdoms
                 = Convert.ToBoolean(node.Attributes.GetNamedItem("add_new_member_after_clan_tier_increase").Value.ToString());
         }
 
+        private void init_new_members_limit_after_clan_tier_increase(XmlNode node)
+        {
+            this.NewMembersLimitAfterClanTierIncrease_ = Convert.ToUInt16(
+                node.Attributes.GetNamedItem("new_members_limit_after_clan_tier_increase").Value.ToString()
+            );
+        }
+
         private static MBReadOnlyList<SnowConfig> All
         {
             get
@@ -281,6 +291,7 @@ namespace SnowballingKingdoms
             OnlyPlayerExpand = SnowConfig.All[0].OnlyPlayerExpand_;
             OnlyAIExpand = SnowConfig.All[0].OnlyAIExpand_;
             AddNewMemberAfterClanTierIncrease = SnowConfig.All[0].AddNewMemberAfterClanTierIncrease_;
+            NewMembersLimitAfterClanTierIncrease = SnowConfig.All[0].NewMembersLimitAfterClanTierIncrease_;
         }
 
     }

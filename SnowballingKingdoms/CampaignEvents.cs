@@ -44,7 +44,8 @@ namespace SnowballingKingdoms
                 && clan.IsClan
                 && clan.IsMinorFaction == false
                 && clan.IsEliminated == false
-                && Clan.PlayerClan != clan 
+                && Clan.PlayerClan != clan
+                && clan.Lords.Count < SnowConfig.NewMembersLimitAfterClanTierIncrease
              ) {
                 ClanMembersGenerator.add_member_to_clan(clan);
             }
@@ -238,7 +239,7 @@ namespace SnowballingKingdoms
                 newClan.InitializeClan(clanName, clanName, clanCulture, clanBanner, kingdomSettlement.GatePosition);
                 newClan.IsNoble = true;
                 newClan.UpdateHomeSettlement(kingdomSettlement);
-                newClan.AddRenown(100f);
+                newClan.AddRenown(200f);
                 newClan.Influence = 100f;
 
                 newClan.Color = clanBanner.GetPrimaryColor();
