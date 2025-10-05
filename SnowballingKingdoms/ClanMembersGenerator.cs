@@ -50,7 +50,7 @@ namespace SnowballingKingdoms
         {
             MBReadOnlyList<CharacterObject> lordTemplates = clan.Culture.LordTemplates;
             CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-            memberTemplate.Culture = clan.Culture;
+            // memberTemplate.Culture = clan.Culture;
             int randomAge = MBRandom.RandomInt(20, 43);
             int isFemale = MBRandom.RandomInt(1, 10);
 
@@ -79,7 +79,7 @@ namespace SnowballingKingdoms
             for (int i = 0; i < membersNum; i++)
             {
                 CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-                memberTemplate.Culture = clan.Culture;
+                // memberTemplate.Culture = clan.Culture;
                 int randomAge = MBRandom.RandomInt(Campaign.Current.Models.AgeModel.HeroComesOfAge, 50);
 
                 int isFemale = 0;
@@ -112,7 +112,7 @@ namespace SnowballingKingdoms
 
             int fatherAge = MBRandom.RandomInt(25, 55);
             CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-            memberTemplate.Culture = clan.Culture;
+            // memberTemplate.Culture = clan.Culture;
             Hero father = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, fatherAge);
             father.Gold = 20000;
             father.StayingInSettlement = settlement;
@@ -120,7 +120,7 @@ namespace SnowballingKingdoms
             
             int motherAge = MBRandom.RandomInt(fatherAge - 3, fatherAge + 3);
             memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-            memberTemplate.Culture = clan.Culture;
+            // memberTemplate.Culture = clan.Culture;
             memberTemplate.IsFemale = true;
             Hero mother = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, motherAge);
             mother.Gold = 20000;
@@ -141,7 +141,7 @@ namespace SnowballingKingdoms
             {
                 childAge = MBRandom.RandomInt(childAge - 4, childAge - 1);
                 memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-                memberTemplate.Culture = clan.Culture;
+                // memberTemplate.Culture = clan.Culture;
 
                 int isFemale = MBRandom.RandomInt(1, 10);
 
@@ -196,7 +196,7 @@ namespace SnowballingKingdoms
 
             int fatherAge = MBRandom.RandomInt(25, 55);
             CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-            memberTemplate.Culture = clan.Culture;
+            // memberTemplate.Culture = clan.Culture;
             Hero father = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, fatherAge);
             father.Gold = 20000;
             father.StayingInSettlement = settlement;
@@ -204,7 +204,7 @@ namespace SnowballingKingdoms
 
             int motherAge = MBRandom.RandomInt(fatherAge - 3, fatherAge + 3);
             memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-            memberTemplate.Culture = clan.Culture;
+            // memberTemplate.Culture = clan.Culture;
             memberTemplate.IsFemale = true;
             Hero mother = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, motherAge);
             mother.Gold = 20000;
@@ -223,7 +223,7 @@ namespace SnowballingKingdoms
             for (int i = 0; i < membersNum; i++)
             {
                 memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-                memberTemplate.Culture = clan.Culture;
+                // memberTemplate.Culture = clan.Culture;
                 int randomAge = MBRandom.RandomInt(Campaign.Current.Models.AgeModel.HeroComesOfAge, 50);
 
                 int isFemale = 0;
@@ -255,7 +255,7 @@ namespace SnowballingKingdoms
 
             int motherAge = MBRandom.RandomInt(25, 55);
             CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-            memberTemplate.Culture = clan.Culture;
+            // memberTemplate.Culture = clan.Culture;
             memberTemplate.IsFemale = true;
             Hero mother = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, motherAge);
             mother.Gold = 20000;
@@ -271,7 +271,7 @@ namespace SnowballingKingdoms
             {
                 childAge = MBRandom.RandomInt(childAge - 4, childAge - 1);
                 memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-                memberTemplate.Culture = clan.Culture;
+                // memberTemplate.Culture = clan.Culture;
 
                 int isFemale = MBRandom.RandomInt(1, 10);
 
@@ -301,7 +301,7 @@ namespace SnowballingKingdoms
             for (int i = 0; i < membersNum; i++)
             {
                 CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-                memberTemplate.Culture = clan.Culture;
+                // memberTemplate.Culture = clan.Culture;
                 int randomAge = MBRandom.RandomInt(Campaign.Current.Models.AgeModel.HeroComesOfAge, 50);
 
                 int isFemale = 6;
@@ -334,7 +334,7 @@ namespace SnowballingKingdoms
 
             int motherAge = MBRandom.RandomInt(35, 55);
             CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-            memberTemplate.Culture = clan.Culture;
+            // memberTemplate.Culture = clan.Culture;
             memberTemplate.IsFemale = true;
             Hero mother = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, motherAge);
             mother.Gold = 20000;
@@ -342,7 +342,7 @@ namespace SnowballingKingdoms
 
             int olderSonAge = motherAge - 15;
             memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-            memberTemplate.Culture = clan.Culture;
+            // memberTemplate.Culture = clan.Culture;
             Hero olderSon = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, olderSonAge);
             mother.Gold = 20000;
             mother.StayingInSettlement = settlement;
@@ -360,7 +360,7 @@ namespace SnowballingKingdoms
             {
                 childAge = MBRandom.RandomInt(childAge - 4, childAge - 1);
                 memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
-                memberTemplate.Culture = clan.Culture;
+                // memberTemplate.Culture = clan.Culture;
 
                 int isFemale = MBRandom.RandomInt(1, 10);
 

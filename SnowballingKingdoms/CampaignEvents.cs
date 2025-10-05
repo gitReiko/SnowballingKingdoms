@@ -45,7 +45,7 @@ namespace SnowballingKingdoms
                 && clan.IsMinorFaction == false
                 && clan.IsEliminated == false
                 && Clan.PlayerClan != clan
-                && clan.Lords.Count < SnowConfig.NewMembersLimitAfterClanTierIncrease
+                && clan.AliveLords.Count < SnowConfig.NewMembersLimitAfterClanTierIncrease
              ) {
                 ClanMembersGenerator.add_member_to_clan(clan);
             }
@@ -229,23 +229,26 @@ namespace SnowballingKingdoms
                 }
 
                 string clanId = get_clan_id(snowball);
-                TextObject clanName = snowball.Name;
-                Banner clanBanner = new Banner(snowball.Banner);
-
+                
                 Clan newClan = Clan.CreateClan(clanId);
 
-                Settlement kingdomSettlement = get_kingdom_settlement(kingdom);
+                TextObject clanName = snowball.Name;
+                newClan.ChangeClanName(clanName, clanName);
 
-                newClan.InitializeClan(clanName, clanName, clanCulture, clanBanner, kingdomSettlement.GatePosition);
+                newClan.Culture = clanCulture;
+
+                Banner clanBanner = new Banner(snowball.Banner);
+                newClan.Banner = clanBanner;
+
+                Settlement kingdomSettlement = get_kingdom_settlement(kingdom);
+                newClan.SetInitialHomeSettlement(kingdomSettlement);
+
                 newClan.IsNoble = true;
-                newClan.UpdateHomeSettlement(kingdomSettlement);
                 newClan.AddRenown(200f);
                 newClan.Influence = 100f;
 
                 newClan.Color = clanBanner.GetPrimaryColor();
                 newClan.Color2 = clanBanner.GetSecondaryColor();
-                newClan.AlternativeColor = clanBanner.GetPrimaryColor();
-                newClan.AlternativeColor2 = clanBanner.GetSecondaryColor();
 
                 newClan.Kingdom = kingdom;
 
@@ -257,7 +260,7 @@ namespace SnowballingKingdoms
                     hero.ChangeState(Hero.CharacterStates.Active);
                 }
 
-                ChangeKingdomAction.ApplyByJoinToKingdom(newClan, kingdom, true);
+                ChangeKingdomAction.ApplyByJoinToKingdom(newClan, kingdom);
 
                 Snowball.remove_used_snowball(snowball);
 
@@ -309,7 +312,7 @@ namespace SnowballingKingdoms
             message.SetTextVariable("KINGDOM", kingdom.Name);
             message.SetTextVariable("SNOWBALL", snowball.Name);
 
-            Color color = Color.FromUint(kingdom.LabelColor);
+            Color color = Color.FromUint(kingdom.PrimaryBannerColor);
 
             InformationManager.DisplayMessage(new InformationMessage(message.ToString(), color));
         }
@@ -324,7 +327,6 @@ namespace SnowballingKingdoms
             snow.Print("snowballs_event");
         }
         */
-
 
 
 
