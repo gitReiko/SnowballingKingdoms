@@ -7,21 +7,23 @@ namespace SnowballingKingdoms
 {
     internal class SnowConfig : MBObjectBase 
     {
-        const byte CREATE_EVERY_DAYS_MIN = 1;
-        const bool ADD_NEW_MEMBER_AFTER_CLAN_TIER_INCREASE = true;
-
-        const float CLAN_CREATION_FACTOR_LESS_THAN_3_SETTLEMENTS_DEFAULT = 1.5f;
-        const float CLAN_CREATION_FACTOR_LESS_THAN_6_SETTLEMENTS_DEFAULT = 2.0f;
-        const float CLAN_CREATION_FACTOR_LESS_THAN_10_SETTLEMENTS_DEFAULT = 2.3f;
-        const float CLAN_CREATION_FACTOR_LESS_THAN_20_SETTLEMENTS_DEFAULT = 2.5f;
-        const float CLAN_CREATION_FACTOR_LESS_THAN_30_SETTLEMENTS_DEFAULT = 3.0f;
-        const float CLAN_CREATION_FACTOR_LESS_THAN_40_SETTLEMENTS_DEFAULT = 3.0f;
-        const float CLAN_CREATION_FACTOR_LESS_THAN_50_SETTLEMENTS_DEFAULT = 3.3f;
-        const float CLAN_CREATION_FACTOR_LESS_THAN_60_SETTLEMENTS_DEFAULT = 3.3f;
-        const float CLAN_CREATION_FACTOR_LESS_THAN_70_SETTLEMENTS_DEFAULT = 3.5f;
-        const float CLAN_CREATION_FACTOR_LESS_THAN_80_SETTLEMENTS_DEFAULT = 3.5f;
-        const float CLAN_CREATION_FACTOR_LESS_THAN_90_SETTLEMENTS_DEFAULT = 3.5f;
-        const float CLAN_CREATION_FACTOR_MORE_THAN_90_SETTLEMENTS_DEFAULT = 4.0f;
+        const bool DEFAULT_ADD_NEW_MEMBER_AFTER_CLAN_TIER_INCREASE = true;
+        const bool DEFAULT_ONLY_AI_EXPAND = false;
+        const bool DEFAULT_ONLY_PLAYER_EXPAND = false;
+        const ushort DEFAULT_CLAN_MEMBERS_LIMIT = 8;
+        const byte DEFAULT_CREATE_EVERY_DAYS_MIN = 1;
+        const float DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_10_SETTLEMENTS = 2.3f;
+        const float DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_20_SETTLEMENTS = 2.5f;
+        const float DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_30_SETTLEMENTS = 3.0f;
+        const float DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_3_SETTLEMENTS = 1.5f;
+        const float DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_40_SETTLEMENTS = 3.0f;
+        const float DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_50_SETTLEMENTS = 3.3f;
+        const float DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_60_SETTLEMENTS = 3.3f;
+        const float DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_6_SETTLEMENTS = 2.0f;
+        const float DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_70_SETTLEMENTS = 3.5f;
+        const float DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_80_SETTLEMENTS = 3.5f;
+        const float DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_90_SETTLEMENTS = 3.5f;
+        const float DEFAULT_CLAN_CREATION_FACTOR_MORE_THAN_90_SETTLEMENTS = 4.0f;
 
         public static float ClanCreationFactorLessThan3Settlements { get; private set; }
         public static float ClanCreationFactorLessThan6Settlements { get; private set; }
@@ -87,180 +89,154 @@ namespace SnowballingKingdoms
 
         private void init_clan_creation_factor_less_than_3_settlements(XmlNode node)
         {
-            float param = Convert.ToSingle(node.Attributes.GetNamedItem("clan_creation_factor_less_then_3_settlements").Value.ToString());
-
-            if (param == 0)
-            {
-                param = SnowConfig.CLAN_CREATION_FACTOR_LESS_THAN_3_SETTLEMENTS_DEFAULT;
-            }
-
-            this.ClanCreationFactorLessThan3Settlements_ = param;
+            this.ClanCreationFactorLessThan3Settlements_ = this.GetFloat(
+                node, 
+                "clan_creation_factor_less_then_3_settlements", 
+                SnowConfig.DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_3_SETTLEMENTS
+            );
         }
 
         private void init_clan_creation_factor_less_than_6_settlements(XmlNode node)
         {
-            float param = Convert.ToSingle(node.Attributes.GetNamedItem("clan_creation_factor_less_then_6_settlements").Value.ToString());
-
-            if (param == 0)
-            {
-                param = SnowConfig.CLAN_CREATION_FACTOR_LESS_THAN_6_SETTLEMENTS_DEFAULT;
-            }
-
-            this.ClanCreationFactorLessThan6Settlements_ = param;
+            this.ClanCreationFactorLessThan6Settlements_ = this.GetFloat(
+                node,
+                "clan_creation_factor_less_then_6_settlements",
+                SnowConfig.DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_6_SETTLEMENTS
+            );
         }
 
         private void init_clan_creation_factor_less_than_10_settlements(XmlNode node)
         {
-            float param = Convert.ToSingle(node.Attributes.GetNamedItem("clan_creation_factor_less_then_10_settlements").Value.ToString());
-
-            if (param == 0)
-            {
-                param = SnowConfig.CLAN_CREATION_FACTOR_LESS_THAN_10_SETTLEMENTS_DEFAULT;
-            }
-
-            this.ClanCreationFactorLessThan10Settlements_ = param;
+            this.ClanCreationFactorLessThan10Settlements_ = this.GetFloat(
+                node,
+                "clan_creation_factor_less_then_10_settlements",
+                SnowConfig.DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_10_SETTLEMENTS
+            );
         }
 
         private void init_clan_creation_factor_less_than_20_settlements(XmlNode node)
         {
-            float param = Convert.ToSingle(node.Attributes.GetNamedItem("clan_creation_factor_less_then_20_settlements").Value.ToString());
-
-            if (param == 0)
-            {
-                param = SnowConfig.CLAN_CREATION_FACTOR_LESS_THAN_20_SETTLEMENTS_DEFAULT;
-            }
-
-            this.ClanCreationFactorLessThan20Settlements_ = param;
+            this.ClanCreationFactorLessThan20Settlements_ = this.GetFloat(
+                node,
+                "clan_creation_factor_less_then_20_settlements",
+                SnowConfig.DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_20_SETTLEMENTS
+            );
         }
 
         private void init_clan_creation_factor_less_than_30_settlements(XmlNode node)
         {
-            float param = Convert.ToSingle(node.Attributes.GetNamedItem("clan_creation_factor_less_then_30_settlements").Value.ToString());
-
-            if (param == 0)
-            {
-                param = SnowConfig.CLAN_CREATION_FACTOR_LESS_THAN_30_SETTLEMENTS_DEFAULT;
-            }
-
-            this.ClanCreationFactorLessThan30Settlements_ = param;
+            this.ClanCreationFactorLessThan30Settlements_ = this.GetFloat(
+                node,
+                "clan_creation_factor_less_then_30_settlements",
+                SnowConfig.DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_30_SETTLEMENTS
+            );
         }
 
         private void init_clan_creation_factor_less_than_40_settlements(XmlNode node)
         {
-            float param = Convert.ToSingle(node.Attributes.GetNamedItem("clan_creation_factor_less_then_40_settlements").Value.ToString());
-
-            if (param == 0)
-            {
-                param = SnowConfig.CLAN_CREATION_FACTOR_LESS_THAN_40_SETTLEMENTS_DEFAULT;
-            }
-
-            this.ClanCreationFactorLessThan40Settlements_ = param;
+            this.ClanCreationFactorLessThan40Settlements_ = this.GetFloat(
+                node,
+                "clan_creation_factor_less_then_40_settlements",
+                SnowConfig.DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_40_SETTLEMENTS
+            );
         }
 
         private void init_clan_creation_factor_less_than_50_settlements(XmlNode node)
         {
-            float param = Convert.ToSingle(node.Attributes.GetNamedItem("clan_creation_factor_less_then_50_settlements").Value.ToString());
-
-            if (param == 0)
-            {
-                param = SnowConfig.CLAN_CREATION_FACTOR_LESS_THAN_50_SETTLEMENTS_DEFAULT;
-            }
-
-            this.ClanCreationFactorLessThan50Settlements_ = param;
+            this.ClanCreationFactorLessThan50Settlements_ = this.GetFloat(
+                node,
+                "clan_creation_factor_less_then_50_settlements",
+                SnowConfig.DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_50_SETTLEMENTS
+            );
         }
 
         private void init_clan_creation_factor_less_than_60_settlements(XmlNode node)
         {
-            float param = Convert.ToSingle(node.Attributes.GetNamedItem("clan_creation_factor_less_then_60_settlements").Value.ToString());
-
-            if (param == 0)
-            {
-                param = SnowConfig.CLAN_CREATION_FACTOR_LESS_THAN_60_SETTLEMENTS_DEFAULT;
-            }
-
-            this.ClanCreationFactorLessThan60Settlements_ = param;
+            this.ClanCreationFactorLessThan60Settlements_ = this.GetFloat(
+                node,
+                "clan_creation_factor_less_then_60_settlements",
+                SnowConfig.DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_60_SETTLEMENTS
+            );
         }
 
         private void init_clan_creation_factor_less_than_70_settlements(XmlNode node)
         {
-            float param = Convert.ToSingle(node.Attributes.GetNamedItem("clan_creation_factor_less_then_70_settlements").Value.ToString());
-
-            if (param == 0)
-            {
-                param = SnowConfig.CLAN_CREATION_FACTOR_LESS_THAN_70_SETTLEMENTS_DEFAULT;
-            }
-
-            this.ClanCreationFactorLessThan70Settlements_ = param;
+            this.ClanCreationFactorLessThan70Settlements_ = this.GetFloat(
+                node,
+                "clan_creation_factor_less_then_70_settlements",
+                SnowConfig.DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_70_SETTLEMENTS
+            );
         }
 
         private void init_clan_creation_factor_less_than_80_settlements(XmlNode node)
         {
-            float param = Convert.ToSingle(node.Attributes.GetNamedItem("clan_creation_factor_less_then_80_settlements").Value.ToString());
-
-            if (param == 0)
-            {
-                param = SnowConfig.CLAN_CREATION_FACTOR_LESS_THAN_80_SETTLEMENTS_DEFAULT;
-            }
-
-            this.ClanCreationFactorLessThan80Settlements_ = param;
+            this.ClanCreationFactorLessThan80Settlements_ = this.GetFloat(
+                node,
+                "clan_creation_factor_less_then_80_settlements",
+                SnowConfig.DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_80_SETTLEMENTS
+            );
         }
 
         private void init_clan_creation_factor_less_than_90_settlements(XmlNode node)
         {
-            float param = Convert.ToSingle(node.Attributes.GetNamedItem("clan_creation_factor_less_then_90_settlements").Value.ToString());
-
-            if (param == 0)
-            {
-                param = SnowConfig.CLAN_CREATION_FACTOR_LESS_THAN_90_SETTLEMENTS_DEFAULT;
-            }
-
-            this.ClanCreationFactorLessThan90Settlements_ = param;
+            this.ClanCreationFactorLessThan90Settlements_ = this.GetFloat(
+                node,
+                "clan_creation_factor_less_then_90_settlements",
+                SnowConfig.DEFAULT_CLAN_CREATION_FACTOR_LESS_THAN_90_SETTLEMENTS
+            );
         }
 
         private void init_clan_creation_factor_more_than_90_settlements(XmlNode node)
         {
-            float param = Convert.ToSingle(node.Attributes.GetNamedItem("clan_creation_factor_more_then_90_settlements").Value.ToString());
-
-            if (param == 0)
-            {
-                param = SnowConfig.CLAN_CREATION_FACTOR_MORE_THAN_90_SETTLEMENTS_DEFAULT;
-            }
-
-            this.ClanCreationFactorMoreThan90Settlements_ = param;
+            this.ClanCreationFactorMoreThan90Settlements_ = this.GetFloat(
+                node,
+                "clan_creation_factor_more_then_90_settlements",
+                SnowConfig.DEFAULT_CLAN_CREATION_FACTOR_MORE_THAN_90_SETTLEMENTS
+            );
         }
 
         private void init_create_every_days(XmlNode node)
         {
-            ushort param = Convert.ToUInt16(node.Attributes.GetNamedItem("create_every_days").Value.ToString());
-
-            if(param == 0)
-            {
-                param = SnowConfig.CREATE_EVERY_DAYS_MIN;
-            }
-
-            this.CreateEveryDays_ = param;
+            this.CreateEveryDays_ = this.GetUShort(
+                node,
+                "create_every_days",
+                SnowConfig.DEFAULT_CREATE_EVERY_DAYS_MIN
+            );
         }
 
         private void init_only_player_expand(XmlNode node)
         {
-            this.OnlyPlayerExpand_ = Convert.ToBoolean(node.Attributes.GetNamedItem("only_player_expand").Value.ToString());
+            this.OnlyPlayerExpand_ = this.GetBool(
+                node,
+                "only_player_expand",
+                SnowConfig.DEFAULT_ONLY_PLAYER_EXPAND
+            );
         }
 
         private void init_only_ai_expand(XmlNode node)
         {
-            this.OnlyAIExpand_ = Convert.ToBoolean(node.Attributes.GetNamedItem("only_ai_expand").Value.ToString());
+            this.OnlyAIExpand_ = this.GetBool(
+                node,
+                "only_ai_expand",
+                SnowConfig.DEFAULT_ONLY_AI_EXPAND
+            );
         }
 
         private void init_add_new_member_after_clan_tier_increase(XmlNode node)
         {
-            this.AddNewMemberAfterClanTierIncrease_ 
-                = Convert.ToBoolean(node.Attributes.GetNamedItem("add_new_member_after_clan_tier_increase").Value.ToString());
+            this.AddNewMemberAfterClanTierIncrease_ = this.GetBool(
+                node,
+                "only_ai_expand",
+                SnowConfig.DEFAULT_ADD_NEW_MEMBER_AFTER_CLAN_TIER_INCREASE
+            );
         }
 
         private void init_new_members_limit_after_clan_tier_increase(XmlNode node)
         {
-            this.NewMembersLimitAfterClanTierIncrease_ = Convert.ToUInt16(
-                node.Attributes.GetNamedItem("new_members_limit_after_clan_tier_increase").Value.ToString()
+            this.NewMembersLimitAfterClanTierIncrease_ = this.GetUShort(
+                node,
+                "new_members_limit_after_clan_tier_increase",
+                SnowConfig.DEFAULT_CLAN_MEMBERS_LIMIT
             );
         }
 
@@ -274,6 +250,12 @@ namespace SnowballingKingdoms
 
         public static void init_config()
         {
+            if (All == null || All.Count == 0)
+            {
+                Debug.Print("[SnowballingKingdoms] SnowConfig not found!", 0, Debug.DebugColor.Red);
+                return;
+            }
+
             ClanCreationFactorLessThan3Settlements = SnowConfig.All[0].ClanCreationFactorLessThan3Settlements_;
             ClanCreationFactorLessThan6Settlements = SnowConfig.All[0].ClanCreationFactorLessThan6Settlements_;
             ClanCreationFactorLessThan10Settlements = SnowConfig.All[0].ClanCreationFactorLessThan10Settlements_;
@@ -294,6 +276,54 @@ namespace SnowballingKingdoms
             NewMembersLimitAfterClanTierIncrease = SnowConfig.All[0].NewMembersLimitAfterClanTierIncrease_;
         }
 
+        private float GetFloat(XmlNode node, string attr, float defaultValue)
+        {
+            if (node?.Attributes == null)
+                return defaultValue;
+
+            XmlNode a = node.Attributes.GetNamedItem(attr);
+            if (a == null || string.IsNullOrWhiteSpace(a.Value))
+                return defaultValue;
+
+            if (float.TryParse(a.Value, System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out float result))
+                return result;
+
+            return defaultValue;
+        }
+
+        private ushort GetUShort(XmlNode node, string attr, ushort defaultValue)
+        {
+            if (node?.Attributes == null)
+                return defaultValue;
+
+            XmlNode a = node.Attributes.GetNamedItem(attr);
+            if (a == null)
+                return defaultValue;
+
+            if (ushort.TryParse(a.Value, out ushort result))
+                return result;
+
+            return defaultValue;
+        }
+
+        private bool GetBool(XmlNode node, string attr, bool defaultValue)
+        {
+            if (node?.Attributes == null)
+                return defaultValue;
+
+            XmlNode a = node.Attributes.GetNamedItem(attr);
+            if (a == null)
+                return defaultValue;
+
+            if (a.Value == "1") return true;
+            if (a.Value == "0") return false;
+
+            if (bool.TryParse(a.Value, out bool result))
+                return result;
+
+            return defaultValue;
+        }
     }
 
 }
