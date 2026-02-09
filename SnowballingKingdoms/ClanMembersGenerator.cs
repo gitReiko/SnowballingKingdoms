@@ -48,7 +48,7 @@ namespace SnowballingKingdoms
 
         public static void add_member_to_clan(Clan clan)
         {
-            MBReadOnlyList<CharacterObject> lordTemplates = clan.Culture.LordTemplates;
+            List<CharacterObject> lordTemplates = clan.Culture.LordTemplates;
             CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
             // memberTemplate.Culture = clan.Culture;
             int randomAge = MBRandom.RandomInt(20, 43);
@@ -73,7 +73,7 @@ namespace SnowballingKingdoms
         private static List<Hero> get_members_without_family(Clan clan, Settlement settlement)
         {
             List<Hero> members = new List<Hero>();
-            MBReadOnlyList<CharacterObject> lordTemplates = clan.Culture.LordTemplates;
+            List<CharacterObject> lordTemplates = clan.Culture.LordTemplates;
 
             int membersNum = MBRandom.RandomInt(2, 5);
             for (int i = 0; i < membersNum; i++)
@@ -107,7 +107,7 @@ namespace SnowballingKingdoms
         private static List<Hero> get_parents_with_children(Clan clan, Settlement settlement)
         {
             List<Hero> members = new List<Hero>();
-            MBReadOnlyList<CharacterObject> lordTemplates = clan.Culture.LordTemplates;
+            List<CharacterObject> lordTemplates = clan.Culture.LordTemplates;
 
 
             int fatherAge = MBRandom.RandomInt(25, 55);
@@ -191,7 +191,7 @@ namespace SnowballingKingdoms
         private static List<Hero> get_family_without_children(Clan clan, Settlement settlement)
         {
             List<Hero> members = new List<Hero>();
-            MBReadOnlyList<CharacterObject> lordTemplates = clan.Culture.LordTemplates;
+            List<CharacterObject> lordTemplates = clan.Culture.LordTemplates;
 
 
             int fatherAge = MBRandom.RandomInt(25, 55);
@@ -251,7 +251,7 @@ namespace SnowballingKingdoms
         private static List<Hero> get_mother_of_children(Clan clan, Settlement settlement)
         {
             List<Hero> members = new List<Hero>();
-            MBReadOnlyList<CharacterObject> lordTemplates = clan.Culture.LordTemplates;
+            List<CharacterObject> lordTemplates = clan.Culture.LordTemplates;
 
             int motherAge = MBRandom.RandomInt(25, 55);
             CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
@@ -295,7 +295,7 @@ namespace SnowballingKingdoms
         private static List<Hero> get_female_leader(Clan clan, Settlement settlement)
         {
             List<Hero> members = new List<Hero>();
-            MBReadOnlyList<CharacterObject> lordTemplates = clan.Culture.LordTemplates;
+            List<CharacterObject> lordTemplates = clan.Culture.LordTemplates;
 
             int membersNum = MBRandom.RandomInt(2, 5);
             for (int i = 0; i < membersNum; i++)
@@ -330,7 +330,7 @@ namespace SnowballingKingdoms
         private static List<Hero> get_older_son(Clan clan, Settlement settlement)
         {
             List<Hero> members = new List<Hero>();
-            MBReadOnlyList<CharacterObject> lordTemplates = clan.Culture.LordTemplates;
+            List<CharacterObject> lordTemplates = clan.Culture.LordTemplates;
 
             int motherAge = MBRandom.RandomInt(35, 55);
             CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);

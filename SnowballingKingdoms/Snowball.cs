@@ -25,7 +25,7 @@ namespace SnowballingKingdoms
 
         public CultureObject SettlementCulture { get; private set; }
 
-        public static MBReadOnlyList<Snowball> AllUnusedSnowballs { get; private set; }
+        public static List<Snowball> AllUnusedSnowballs { get; private set; }
 
         public override void Deserialize(MBObjectManager objectManager, XmlNode node)
         {
@@ -155,9 +155,10 @@ namespace SnowballingKingdoms
 
         private void handle_priority_attr(XmlNode node)
         {
-            if (node.Attributes["priority"] != null)
+            if (node.Attributes["priority"] != null &&
+                int.TryParse(node.Attributes["priority"].Value, out int priority))
             {
-                this.Priority = Convert.ToInt32(node.Attributes.GetNamedItem("priority").Value.ToString());
+                this.Priority = priority;
             }
             else
             {
@@ -165,9 +166,9 @@ namespace SnowballingKingdoms
             }
         }
 
-        public static void initilize_unused_snowballs()
+        public static void initialize_unused_snowballs()
         {
-            MBReadOnlyList<Snowball> unused = new MBReadOnlyList<Snowball>();
+            List<Snowball> unused = new List<Snowball>();
 
             foreach (Snowball snowball in Snowball.All)
             {
@@ -182,12 +183,18 @@ namespace SnowballingKingdoms
 
         public static void remove_used_snowball(Snowball snowball)
         {
+            if (Snowball.AllUnusedSnowballs == null)
+                Snowball.initialize_unused_snowballs();
+
             Snowball.AllUnusedSnowballs.Remove(snowball);
         }
 
-        public static MBReadOnlyList<Snowball> get_all_unused_for_kingdom(string kingdomId)
+        public static List<Snowball> get_all_unused_for_kingdom(string kingdomId)
         {
-            MBReadOnlyList<Snowball> unused = new MBReadOnlyList<Snowball>();
+            if (Snowball.AllUnusedSnowballs == null)
+                Snowball.initialize_unused_snowballs();
+
+            List<Snowball> unused = new List<Snowball>();
 
             foreach (Snowball snowball in Snowball.AllUnusedSnowballs)
             {
@@ -202,9 +209,12 @@ namespace SnowballingKingdoms
             return unused;
         }
 
-        public static MBReadOnlyList<Snowball> get_all_unused_for_kingdom_main_culture(string cultureId)
+        public static List<Snowball> get_all_unused_for_kingdom_main_culture(string cultureId)
         {
-            MBReadOnlyList<Snowball> unused = new MBReadOnlyList<Snowball>();
+            if (Snowball.AllUnusedSnowballs == null)
+                Snowball.initialize_unused_snowballs();
+
+            List<Snowball> unused = new List<Snowball>();
 
             foreach (Snowball snowball in Snowball.AllUnusedSnowballs)
             {
@@ -219,12 +229,15 @@ namespace SnowballingKingdoms
             return unused;
         }
 
-        public static MBReadOnlyList<Snowball> get_all_unused_for_kingdom_culturies(Kingdom kingdom)
+        public static List<Snowball> get_all_unused_for_kingdom_cultures(Kingdom kingdom)
         {
-            MBReadOnlyList<Snowball> unused = new MBReadOnlyList<Snowball>();
-            List<CultureObject> culturies = get_all_kingdom_culturies(kingdom);
+            if (Snowball.AllUnusedSnowballs == null)
+                Snowball.initialize_unused_snowballs();
 
-            foreach(CultureObject culture in culturies)
+            List<Snowball> unused = new List<Snowball>();
+            List<CultureObject> cultures = get_all_kingdom_cultures(kingdom);
+
+            foreach(CultureObject culture in cultures)
             {
                 foreach (Snowball snowball in Snowball.AllUnusedSnowballs)
                 {
@@ -241,9 +254,12 @@ namespace SnowballingKingdoms
             return unused;
         }
 
-        public static MBReadOnlyList<Snowball> get_all_unused()
+        public static List<Snowball> get_all_unused()
         {
-            MBReadOnlyList<Snowball> unused = new MBReadOnlyList<Snowball>();
+            if (Snowball.AllUnusedSnowballs == null)
+                Snowball.initialize_unused_snowballs();
+
+            List<Snowball> unused = new List<Snowball>();
 
             foreach (Snowball snowball in Snowball.AllUnusedSnowballs)
             {
@@ -271,7 +287,7 @@ namespace SnowballingKingdoms
             return null;
         }
 
-        private static MBReadOnlyList<Snowball> All
+        private static List<Snowball> All
         {
             get
             {
@@ -281,10 +297,14 @@ namespace SnowballingKingdoms
 
         private static bool is_clan_unused(Snowball snowball)
         {
+            if (Clan.All == null)
+                return true;
+
             foreach (Clan clan in Clan.All)
             {
-                if ((clan.Name == snowball.Name) || (clan.StringId == snowball.Id))
-                {
+                if (clan.Name?.ToString() == snowball.Name?.ToString()
+                    || clan.StringId == snowball.Id
+                ) {
                     return false;
                 }
             }
@@ -292,24 +312,24 @@ namespace SnowballingKingdoms
             return true;
         }
 
-        private static List<CultureObject> get_all_kingdom_culturies(Kingdom kingdom)
+        private static List<CultureObject> get_all_kingdom_cultures(Kingdom kingdom)
         {
-            List<CultureObject> culturies = new List<CultureObject>();
+            List<CultureObject> cultures = new List<CultureObject>();
 
             foreach(Settlement settlement in kingdom.Settlements)
             {
-                if(!is_culture_already_exists(culturies, settlement.Culture))
+                if(!is_culture_already_exists(cultures, settlement.Culture))
                 {
-                    culturies.Add(settlement.Culture);
+                    cultures.Add(settlement.Culture);
                 }
             }
 
-            return culturies;
+            return cultures;
         }
 
-        private static bool is_culture_already_exists(List<CultureObject> culturies, CultureObject settlementCulture)
+        private static bool is_culture_already_exists(List<CultureObject> cultures, CultureObject settlementCulture)
         {
-            foreach(CultureObject culture in culturies)
+            foreach(CultureObject culture in cultures)
             {
                 if(culture == settlementCulture)
                 {
@@ -320,11 +340,11 @@ namespace SnowballingKingdoms
             return false;
         }
 
-        private static MBReadOnlyList<Snowball> get_snowballs_with_highest_priority(MBReadOnlyList<Snowball> snowballs)
+        private static List<Snowball> get_snowballs_with_highest_priority(List<Snowball> snowballs)
         {
             int highest_priority = get_highest_priority(snowballs);
 
-            MBReadOnlyList<Snowball> prioritySnowballs = new MBReadOnlyList<Snowball>();
+            List<Snowball> prioritySnowballs = new List<Snowball>();
             foreach (Snowball snowball in snowballs)
             {
                 if(snowball.Priority == highest_priority)
@@ -336,9 +356,9 @@ namespace SnowballingKingdoms
             return prioritySnowballs;
         }
 
-        private static int get_highest_priority(MBReadOnlyList<Snowball> snowballs)
+        private static int get_highest_priority(List<Snowball> snowballs)
         {
-            int highest_priority = 2147483647;
+            int highest_priority = int.MaxValue;
 
             foreach (Snowball snowball in snowballs)
             {

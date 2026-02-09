@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 using TaleWorlds.Library;
 using TaleWorlds.ObjectSystem;
@@ -240,7 +241,7 @@ namespace SnowballingKingdoms
             );
         }
 
-        private static MBReadOnlyList<SnowConfig> All
+        private static List<SnowConfig> All
         {
             get
             {
