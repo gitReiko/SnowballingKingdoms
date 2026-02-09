@@ -39,6 +39,9 @@ namespace SnowballingKingdoms
 
         private void AddMemberToClan(Clan clan, bool shouldNotify)
         {
+            if (clan.Leader == null || clan.Culture == null)
+                return;
+
             if (
                 SnowConfig.AddNewMemberAfterClanTierIncrease
                 && clan.IsClan
@@ -88,7 +91,12 @@ namespace SnowballingKingdoms
         private bool is_settlements_enough_to_create_new_clan(Kingdom kingdom)
         {
             float settlementsCount = get_settlement_count(kingdom);
-            float settlementsRate = settlementsCount / get_clans_count(kingdom);
+            float clansCount = get_clans_count(kingdom);
+
+            if (clansCount <= 0f)
+                return false;
+
+            float settlementsRate = settlementsCount / clansCount;
 
             if (settlementsCount < 3 && settlementsRate > SnowConfig.ClanCreationFactorLessThan3Settlements )
             {
@@ -241,6 +249,13 @@ namespace SnowballingKingdoms
                 newClan.Banner = clanBanner;
 
                 Settlement kingdomSettlement = get_kingdom_settlement(kingdom);
+
+                if (kingdomSettlement == null)
+                {
+                    Debug.Print($"[Snowball] Kingdom '{kingdom.StringId}' has no settlements, skip clan creation", 0);
+                    return;
+                }
+
                 newClan.SetInitialHomeSettlement(kingdomSettlement);
 
                 newClan.IsNoble = true;
@@ -252,11 +267,20 @@ namespace SnowballingKingdoms
 
                 newClan.Kingdom = kingdom;
 
-                List<Hero> heros = ClanMembersGenerator.GenerateClanMemeber(newClan, kingdomSettlement);
-                newClan.SetLeader(heros[0]);
+                List<Hero> heroes = ClanMembersGenerator.GenerateClanMemeber(newClan, kingdomSettlement);
 
-                foreach (Hero hero in heros)
+                if (heroes.IsEmpty())
                 {
+                    Debug.Print("[Snowball] Clan members for kingdom '{kingdom.StringId}' not generated, skip clan creation", 0);
+                    return;
+                }
+                newClan.SetLeader(heroes[0]);
+
+                foreach (Hero hero in heroes)
+                {
+                    if (!newClan.Heroes.Contains(hero))
+                        newClan.Heroes.Add(hero);
+
                     hero.ChangeState(Hero.CharacterStates.Active);
                 }
 
@@ -327,8 +351,5 @@ namespace SnowballingKingdoms
             snow.Print("snowballs_event");
         }
         */
-
-
-
     }
 }
