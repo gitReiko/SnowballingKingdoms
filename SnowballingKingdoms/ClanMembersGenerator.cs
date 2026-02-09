@@ -57,6 +57,9 @@ namespace SnowballingKingdoms
             member.ChangeState(Hero.CharacterStates.Active);
             member.Culture = clan.Culture;
 
+            if (clan.HomeSettlement != null)
+                member.StayingInSettlement = clan.HomeSettlement;
+
             int isFemale = MBRandom.RandomInt(1, 10);
             if (isFemale == 5 || isFemale == 9)
             {
@@ -66,8 +69,6 @@ namespace SnowballingKingdoms
             {
                 member.IsFemale = false;
             }
-
-            clan.Heroes.Add(member);
         }
 
         private static List<Hero> get_members_without_family(Clan clan, Settlement settlement)
@@ -83,8 +84,12 @@ namespace SnowballingKingdoms
 
                 Hero member = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, randomAge);
                 member.Gold = 20000;
-                member.StayingInSettlement = settlement;
                 member.Culture = clan.Culture;
+
+                if (settlement != null)
+                {
+                    member.StayingInSettlement = settlement;
+                }
 
                 int isFemale = 0;
                 if (i > 0)
@@ -112,17 +117,25 @@ namespace SnowballingKingdoms
             CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
             Hero father = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, fatherAge);
             father.Gold = 20000;
-            father.StayingInSettlement = settlement;
             father.Culture = clan.Culture;
+
+            if (settlement != null)
+            {
+                father.StayingInSettlement = settlement;
+            }
 
             int motherAge = MBRandom.RandomInt(fatherAge - 3, fatherAge + 3);
             memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
             
             Hero mother = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, motherAge);
             mother.Gold = 20000;
-            mother.StayingInSettlement = settlement;
             mother.Culture = clan.Culture;
             mother.IsFemale = true;
+
+            if (settlement != null)
+            {
+                mother.StayingInSettlement = settlement;
+            }
 
 
             father.Spouse = mother;
@@ -137,18 +150,26 @@ namespace SnowballingKingdoms
 
             for (int i = 0; i < childrensNum; i++)
             {
-                childAge = MBRandom.RandomInt(childAge - 4, childAge - 1);
+                int memberAge = MBRandom.RandomInt(childAge - 4, childAge - 1);
+                if (memberAge <= 0)
+                {
+                    memberAge = 1;
+                }
                 memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
 
-                Hero child = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, childAge);
+                Hero child = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, memberAge);
                 child.Gold = 10000;
-                child.StayingInSettlement = settlement;
                 child.Culture = clan.Culture;
 
                 int isFemale = MBRandom.RandomInt(1, 10);
                 if (isFemale > 5)
                 {
                     child.IsFemale = true;
+                }
+
+                if (settlement != null)
+                {
+                    child.StayingInSettlement = settlement;
                 }
 
                 child.Father = father;
@@ -163,7 +184,7 @@ namespace SnowballingKingdoms
 
         private static int get_number_of_childrens(int motherAge)
         {
-            int maxNumber = 0;
+            int maxNumber = 1;
 
             if(motherAge > 40)
             {
@@ -195,17 +216,25 @@ namespace SnowballingKingdoms
             CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
             Hero father = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, fatherAge);
             father.Gold = 20000;
-            father.StayingInSettlement = settlement;
             father.Culture = clan.Culture;
+
+            if (settlement != null)
+            {
+                father.StayingInSettlement = settlement;
+            }
 
 
             int motherAge = MBRandom.RandomInt(fatherAge - 3, fatherAge + 3);
             memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
             Hero mother = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, motherAge);
             mother.Gold = 20000;
-            mother.StayingInSettlement = settlement;
             mother.Culture = clan.Culture;
             mother.IsFemale = true;
+
+            if (settlement != null)
+            {
+                mother.StayingInSettlement = settlement;
+            }
 
 
             father.Spouse = mother;
@@ -225,7 +254,6 @@ namespace SnowballingKingdoms
                 Hero member = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, randomAge);
 
                 member.Gold = 20000;
-                member.StayingInSettlement = settlement;
                 member.Culture = clan.Culture;
 
                 int isFemale = 0;
@@ -236,6 +264,11 @@ namespace SnowballingKingdoms
                 if (isFemale > 5)
                 {
                     member.IsFemale = true;
+                }
+
+                if (settlement != null)
+                {
+                    member.StayingInSettlement = settlement;
                 }
 
                 members.Add(member);
@@ -253,9 +286,13 @@ namespace SnowballingKingdoms
             CharacterObject memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
             Hero mother = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, motherAge);
             mother.Gold = 20000;
-            mother.StayingInSettlement = settlement;
             mother.Culture = clan.Culture;
             mother.IsFemale = true;
+
+            if (settlement != null)
+            {
+                mother.StayingInSettlement = settlement;
+            }
 
             members.Add(mother);
 
@@ -265,18 +302,26 @@ namespace SnowballingKingdoms
 
             for (int i = 0; i < childrensNum; i++)
             {
-                childAge = MBRandom.RandomInt(childAge - 4, childAge - 1);
+                int memberAge = MBRandom.RandomInt(childAge - 4, childAge - 1);
+                if (memberAge <= 0)
+                {
+                    memberAge = 1;
+                }
                 memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
 
-                Hero child = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, childAge);
+                Hero child = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, memberAge);
                 child.Gold = 10000;
-                child.StayingInSettlement = settlement;
                 child.Culture = clan.Culture;
 
                 int isFemale = MBRandom.RandomInt(1, 10);
                 if (isFemale > 5)
                 {
                     child.IsFemale = true;
+                }
+
+                if (settlement != null)
+                {
+                    child.StayingInSettlement = settlement;
                 }
 
                 child.Mother = mother;
@@ -300,7 +345,6 @@ namespace SnowballingKingdoms
 
                 Hero member = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, randomAge);
                 member.Gold = 20000;
-                member.StayingInSettlement = settlement;
                 member.Culture = clan.Culture;
 
                 int isFemale = 6;
@@ -311,6 +355,11 @@ namespace SnowballingKingdoms
                 if (isFemale > 5)
                 {
                     member.IsFemale = true;
+                }
+
+                if (settlement != null)
+                {
+                    member.StayingInSettlement = settlement;
                 }
 
                 members.Add(member);
@@ -330,17 +379,25 @@ namespace SnowballingKingdoms
 
             Hero mother = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, motherAge);
             mother.Gold = 20000;
-            mother.StayingInSettlement = settlement;
             mother.Culture = clan.Culture;
             mother.IsFemale = true;
+
+            if (settlement != null)
+            {
+                mother.StayingInSettlement = settlement;
+            }
 
             int olderSonAge = motherAge - 15;
             memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
             Hero olderSon = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, olderSonAge);
             olderSon.Gold = 20000;
-            olderSon.StayingInSettlement = settlement;
             olderSon.Mother = mother;
             olderSon.Culture = clan.Culture;
+
+            if (settlement != null)
+            {
+                olderSon.StayingInSettlement = settlement;
+            }
 
             members.Add(olderSon);
             members.Add(mother);
@@ -351,18 +408,26 @@ namespace SnowballingKingdoms
 
             for (int i = 0; i < childrensNum; i++)
             {
-                childAge = MBRandom.RandomInt(childAge - 4, childAge - 1);
+                int memberAge = MBRandom.RandomInt(childAge - 4, childAge - 1);
+                if (memberAge <= 0)
+                {
+                    memberAge = 1;
+                }
                 memberTemplate = Extensions.GetRandomElement<CharacterObject>(lordTemplates);
 
-                Hero child = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, childAge);
+                Hero child = HeroCreator.CreateSpecialHero(memberTemplate, settlement, clan, null, memberAge);
                 child.Gold = 10000;
-                child.StayingInSettlement = settlement;
                 child.Culture = clan.Culture;
 
                 int isFemale = MBRandom.RandomInt(1, 10);
                 if (isFemale > 5)
                 {
                     child.IsFemale = true;
+                }
+
+                if (settlement != null)
+                {
+                    child.StayingInSettlement = settlement;
                 }
 
                 child.Mother = mother;

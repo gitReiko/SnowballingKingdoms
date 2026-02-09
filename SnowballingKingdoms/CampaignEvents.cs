@@ -278,9 +278,6 @@ namespace SnowballingKingdoms
 
                 foreach (Hero hero in heroes)
                 {
-                    if (!newClan.Heroes.Contains(hero))
-                        newClan.Heroes.Add(hero);
-
                     hero.ChangeState(Hero.CharacterStates.Active);
                 }
 
