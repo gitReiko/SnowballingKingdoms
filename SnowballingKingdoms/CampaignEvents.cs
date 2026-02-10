@@ -283,6 +283,9 @@ namespace SnowballingKingdoms
 
                 ChangeKingdomAction.ApplyByJoinToKingdom(newClan, kingdom);
 
+                /** Prevents a crash when determining the new settlement owner. */
+                newClan.CalculateMidSettlement();
+
                 Snowball.remove_used_snowball(snowball);
 
                 print_clan_created(kingdom, snowball);
@@ -297,8 +300,11 @@ namespace SnowballingKingdoms
         {
             foreach (Settlement settlement in kingdom.Settlements)
             {
-                if (settlement.IsCastle || settlement.IsTown)
-                {
+                if (settlement.IsCastle || settlement.IsTown
+                    && settlement.OwnerClan != null
+                    && settlement.MapFaction != null
+                    && settlement.IsActive
+                ) {
                     return settlement;
                 }
             }
