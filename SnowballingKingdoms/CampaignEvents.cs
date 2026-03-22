@@ -12,6 +12,7 @@ namespace SnowballingKingdoms
 {
     internal class SnowballEvents : CampaignBehaviorBase
     {
+        public const string CLAN_PREFIX = "sb_clan_";
 
         public override void SyncData(IDataStore dataStore) { }
 
@@ -325,7 +326,7 @@ namespace SnowballingKingdoms
         {
             if (snowball.Id == null)
             {
-                return "sb_clan_" + Clan.All.Count;
+                return SnowballEvents.CLAN_PREFIX + Clan.All.Count;
             }
             else
             {

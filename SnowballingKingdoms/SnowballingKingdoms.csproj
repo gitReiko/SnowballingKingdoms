@@ -243,6 +243,7 @@
     <Compile Include="Patches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Snowball.cs" />
+    <Compile Include="SnowballFixesBehavior.cs" />
     <Compile Include="SnowConfig.cs" />
   </ItemGroup>
   <ItemGroup>

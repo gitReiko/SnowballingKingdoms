@@ -14,24 +14,17 @@ namespace SnowballingKingdoms
             base.OnSubModuleLoad();
         }
 
-        public override void OnCampaignStart(Game game, object starterObject)
-        {
-            this.InitializeGame(game, (IGameStarter)starterObject);
-        }
-
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
-            this.InitializeGame(game, gameStarterObject);
-        }
+            if (game.GameType is Campaign campaign)
+            {
+                var starter = gameStarterObject as CampaignGameStarter;
+                if (starter == null)
+                    return;
 
-        public void InitializeGame(Game game, IGameStarter gameStarter)
-        {
-            this.AddBehaviours(gameStarter as CampaignGameStarter);
-        }
-
-        private void AddBehaviours(CampaignGameStarter starter)
-        {
-            starter.AddBehavior(new SnowballEvents());
+                starter.AddBehavior(new SnowballEvents());
+                starter.AddBehavior(new SnowballFixesBehavior());
+            }
         }
 
         public override void BeginGameStart(Game game)
