@@ -227,7 +227,7 @@ namespace SnowballingKingdoms
         {
             this.AddNewMemberAfterClanTierIncrease_ = this.GetBool(
                 node,
-                "only_ai_expand",
+                "add_new_member_after_clan_tier_increase",
                 SnowConfig.DEFAULT_ADD_NEW_MEMBER_AFTER_CLAN_TIER_INCREASE
             );
         }
