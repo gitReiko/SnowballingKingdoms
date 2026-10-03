@@ -211,7 +211,7 @@ namespace SnowballingKingdoms
 
         private void create_new_clan(CultureObject clanCulture, Kingdom kingdom)
         {
-            if (kingdom == null || kingdom.Culture == null)
+            if (kingdom == null || kingdom.IsEliminated || kingdom.Culture == null)
                 return;
 
             List<Snowball> snowballs = Snowball.get_all_unused_for_kingdom(kingdom.StringId);
@@ -233,14 +233,23 @@ namespace SnowballingKingdoms
 
             if (!snowballs.IsEmpty())
             {
-                Snowball snowball = snowballs[MBRandom.RandomInt(0, (snowballs.Count-1))];
+                Snowball snowball = snowballs[MBRandom.RandomInt(0, snowballs.Count)];
+
+                if (snowball == null || snowball.Name == null
+                    || string.IsNullOrWhiteSpace(snowball.Name.ToString())
+                    || string.IsNullOrWhiteSpace(snowball.Banner))
+                {
+                    Debug.Print("[Snowball] Invalid clan name or banner, skip clan creation", 0);
+                    return;
+                }
 
                 if(snowball.SettlementCulture != null)
                 {
                     clanCulture = snowball.SettlementCulture;
                 }
 
-                if (!ClanMembersGenerator.CanGenerateMembers(clanCulture))
+                Func<Clan, Settlement, List<Hero>> generateMembers;
+                if (!ClanMembersGenerator.TryPrepareClanMembers(clanCulture, out generateMembers))
                 {
                     Debug.Print($"[Snowball] Culture '{clanCulture?.StringId}' has no usable lord templates or age model, skip clan creation", 0);
                     return;
@@ -254,7 +263,31 @@ namespace SnowballingKingdoms
                 }
 
                 string clanId = get_clan_id(snowball);
-                
+                if (is_clan_id_used(clanId))
+                {
+                    Debug.Print($"[Snowball] Clan ID '{clanId}' is already in use, skip clan creation", 0);
+                    return;
+                }
+
+                Banner clanBanner;
+                uint primaryColor;
+                uint secondaryColor;
+                try
+                {
+                    clanBanner = new Banner(snowball.Banner);
+                    primaryColor = clanBanner.GetPrimaryColor();
+                    secondaryColor = clanBanner.GetSecondaryColor();
+                }
+                catch (Exception exception) when (exception is ArgumentException
+                    || exception is FormatException
+                    || exception is OverflowException
+                    || exception is IndexOutOfRangeException)
+                {
+                    Debug.Print($"[Snowball] Invalid banner for clan '{clanId}': {exception.Message}, skip clan creation", 0);
+                    return;
+                }
+
+                // All input validation is complete before registering campaign objects.
                 Clan newClan = Clan.CreateClan(clanId);
 
                 TextObject clanName = snowball.Name;
@@ -262,7 +295,6 @@ namespace SnowballingKingdoms
 
                 newClan.Culture = clanCulture;
 
-                Banner clanBanner = new Banner(snowball.Banner);
                 newClan.Banner = clanBanner;
 
                 newClan.SetInitialHomeSettlement(kingdomSettlement);
@@ -271,18 +303,10 @@ namespace SnowballingKingdoms
                 newClan.AddRenown(200f);
                 newClan.Influence = 100f;
 
-                newClan.Color = clanBanner.GetPrimaryColor();
-                newClan.Color2 = clanBanner.GetSecondaryColor();
+                newClan.Color = primaryColor;
+                newClan.Color2 = secondaryColor;
 
-                newClan.Kingdom = kingdom;
-
-                List<Hero> heroes = ClanMembersGenerator.GenerateClanMemeber(newClan, kingdomSettlement);
-
-                if (heroes.IsEmpty())
-                {
-                    Debug.Print($"[Snowball] Clan members for kingdom '{kingdom.StringId}' not generated, skip clan creation", 0);
-                    return;
-                }
+                List<Hero> heroes = generateMembers(newClan, kingdomSettlement);
                 newClan.SetLeader(heroes[0]);
 
                 foreach (Hero hero in heroes)
@@ -309,7 +333,8 @@ namespace SnowballingKingdoms
         {
             foreach (Settlement settlement in kingdom.Settlements)
             {
-                if (settlement.IsCastle || settlement.IsTown
+                if (settlement != null
+                    && (settlement.IsCastle || settlement.IsTown)
                     && settlement.OwnerClan != null
                     && settlement.MapFaction != null
                     && settlement.IsActive
@@ -332,14 +357,31 @@ namespace SnowballingKingdoms
 
         private string get_clan_id(Snowball snowball)
         {
-            if (snowball.Id == null)
-            {
-                return SnowballEvents.CLAN_PREFIX + Clan.All.Count;
-            }
-            else
+            if (!string.IsNullOrWhiteSpace(snowball.Id))
             {
                 return snowball.Id;
             }
+
+            int suffix = Clan.All.Count;
+            string clanId;
+            do
+            {
+                clanId = CLAN_PREFIX + suffix++;
+            }
+            while (is_clan_id_used(clanId));
+
+            return clanId;
+        }
+
+        private bool is_clan_id_used(string clanId)
+        {
+            foreach (Clan clan in Clan.All)
+            {
+                if (clan.StringId == clanId)
+                    return true;
+            }
+
+            return false;
         }
 
         private void print_clan_created(Kingdom kingdom, Snowball snowball)

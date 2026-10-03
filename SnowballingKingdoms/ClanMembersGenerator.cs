@@ -13,23 +13,40 @@ namespace SnowballingKingdoms
 
         public static List<Hero> GenerateClanMemeber(Clan clan, Settlement settlement)
         {
-            List<Hero> members = new List<Hero>();
-
-            List<CharacterObject> lordTemplates = GetLordTemplates(clan?.Culture);
-            if (lordTemplates.Count == 0 || Campaign.Current?.Models?.AgeModel == null)
+            Func<Clan, Settlement, List<Hero>> generateMembers;
+            if (!TryPrepareClanMembers(clan?.Culture, out generateMembers))
             {
                 Debug.Print("[Snowball] Cannot generate clan members: culture, lord templates or age model unavailable.", 0);
-                return members;
+                return new List<Hero>();
             }
 
+            return generateMembers(clan, settlement);
+        }
+
+        public static bool TryPrepareClanMembers(CultureObject culture, out Func<Clan, Settlement, List<Hero>> generateMembers)
+        {
+            generateMembers = null;
+            List<CharacterObject> lordTemplates = GetLordTemplates(culture);
+            if (lordTemplates.Count == 0 || Campaign.Current?.Models?.AgeModel == null)
+                return false;
+
+            // Keep a validated snapshot before the clan is registered in the campaign.
+            bool hasBothSexes = lordTemplates.Exists(template => template.IsFemale)
+                && lordTemplates.Exists(template => !template.IsFemale);
+            int clanType = hasBothSexes ? MBRandom.RandomInt(1, 14) : 0;
+            generateMembers = (clan, settlement) => GeneratePreparedClanMembers(clan, settlement, lordTemplates, clanType);
+            return true;
+        }
+
+        private static List<Hero> GeneratePreparedClanMembers(Clan clan, Settlement settlement, List<CharacterObject> lordTemplates, int clanType)
+        {
+            List<Hero> members = new List<Hero>();
+
             // Family roles require templates of both sexes. Never change shared templates.
-            if (!lordTemplates.Exists(template => template.IsFemale)
-                || !lordTemplates.Exists(template => !template.IsFemale))
+            if (clanType == 0)
             {
                 return get_members_without_family(clan, settlement, lordTemplates);
             }
-
-            int clanType = MBRandom.RandomInt(1, 14);
 
             if (clanType > 10)
             {
