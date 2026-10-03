@@ -23,7 +23,6 @@ namespace SnowballingKingdoms
                     return;
 
                 starter.AddBehavior(new SnowballEvents());
-                starter.AddBehavior(new SnowballFixesBehavior());
             }
         }
 
