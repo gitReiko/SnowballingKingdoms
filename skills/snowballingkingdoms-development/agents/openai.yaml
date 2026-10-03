@@ -1,0 +1,4 @@
+interface:
+  display_name: "SnowballingKingdoms: Development · 1.4.8"
+  short_description: "Develop the C# mod for Bannerlord 1.4.8"
+  default_prompt: "Use $snowballingkingdoms-development to fix or extend SnowballingKingdoms for Bannerlord 1.4.8."

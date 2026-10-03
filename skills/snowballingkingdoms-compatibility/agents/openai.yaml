@@ -1,0 +1,4 @@
+interface:
+  display_name: "SnowballingKingdoms: Compatibility · 1.4.8"
+  short_description: "Review mod compatibility for Bannerlord 1.4.8"
+  default_prompt: "Use $snowballingkingdoms-compatibility to review SnowballingKingdoms compatibility with other mods in Bannerlord 1.4.8."
