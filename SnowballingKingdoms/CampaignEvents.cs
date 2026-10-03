@@ -40,7 +40,7 @@ namespace SnowballingKingdoms
 
         private void AddMemberToClan(Clan clan, bool shouldNotify)
         {
-            if (clan.Leader == null || clan.Culture == null)
+            if (clan == null || clan.Leader == null || clan.Culture == null)
                 return;
 
             if (
@@ -211,6 +211,9 @@ namespace SnowballingKingdoms
 
         private void create_new_clan(CultureObject clanCulture, Kingdom kingdom)
         {
+            if (kingdom == null || kingdom.Culture == null)
+                return;
+
             List<Snowball> snowballs = Snowball.get_all_unused_for_kingdom(kingdom.StringId);
 
             if (snowballs.IsEmpty())
@@ -237,6 +240,19 @@ namespace SnowballingKingdoms
                     clanCulture = snowball.SettlementCulture;
                 }
 
+                if (!ClanMembersGenerator.CanGenerateMembers(clanCulture))
+                {
+                    Debug.Print($"[Snowball] Culture '{clanCulture?.StringId}' has no usable lord templates or age model, skip clan creation", 0);
+                    return;
+                }
+
+                Settlement kingdomSettlement = get_kingdom_settlement(kingdom);
+                if (kingdomSettlement == null)
+                {
+                    Debug.Print($"[Snowball] Kingdom '{kingdom.StringId}' has no settlements, skip clan creation", 0);
+                    return;
+                }
+
                 string clanId = get_clan_id(snowball);
                 
                 Clan newClan = Clan.CreateClan(clanId);
@@ -248,14 +264,6 @@ namespace SnowballingKingdoms
 
                 Banner clanBanner = new Banner(snowball.Banner);
                 newClan.Banner = clanBanner;
-
-                Settlement kingdomSettlement = get_kingdom_settlement(kingdom);
-
-                if (kingdomSettlement == null)
-                {
-                    Debug.Print($"[Snowball] Kingdom '{kingdom.StringId}' has no settlements, skip clan creation", 0);
-                    return;
-                }
 
                 newClan.SetInitialHomeSettlement(kingdomSettlement);
 
@@ -272,7 +280,7 @@ namespace SnowballingKingdoms
 
                 if (heroes.IsEmpty())
                 {
-                    Debug.Print("[Snowball] Clan members for kingdom '{kingdom.StringId}' not generated, skip clan creation", 0);
+                    Debug.Print($"[Snowball] Clan members for kingdom '{kingdom.StringId}' not generated, skip clan creation", 0);
                     return;
                 }
                 newClan.SetLeader(heroes[0]);
