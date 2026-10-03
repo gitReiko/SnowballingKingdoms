@@ -4,6 +4,7 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.ObjectSystem;
 
 namespace SnowballingKingdoms
 {
@@ -461,7 +462,7 @@ namespace SnowballingKingdoms
             if (hero?.HeroDeveloper == null || template == null)
                 return;
 
-            foreach (SkillObject skill in Skills.All)
+            foreach (SkillObject skill in MBObjectManager.Instance.GetObjectTypeList<SkillObject>())
             {
                 int value = template.GetSkillValue(skill);
                 if (value > 0)
@@ -472,7 +473,7 @@ namespace SnowballingKingdoms
 
             if (!HasSkills(hero))
             {
-                foreach (SkillObject skill in Skills.All)
+                foreach (SkillObject skill in MBObjectManager.Instance.GetObjectTypeList<SkillObject>())
                 {
                     int randSkill = MBRandom.RandomInt(0, 300);
                     hero.HeroDeveloper.SetInitialSkillLevel(skill, randSkill);
@@ -482,7 +483,7 @@ namespace SnowballingKingdoms
 
         private static bool HasSkills(Hero hero)
         {
-            foreach (SkillObject skill in Skills.All)
+            foreach (SkillObject skill in MBObjectManager.Instance.GetObjectTypeList<SkillObject>())
             {
                 if (hero.GetSkillValue(skill) > 0)
                     return true;
